@@ -6,6 +6,7 @@ import (
 
 	"sispak-dada/config"
 	"sispak-dada/models"
+	"sispak-dada/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -54,6 +55,15 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	hashedPassword, err := utils.HashPassword(request.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Gagal mengenkripsi password",
+			"error":   err.Error(),
+		})
+		return
+	}
+
 	var user models.User
 
 	err = config.DB.QueryRow(context.Background(), `
@@ -63,7 +73,7 @@ func Register(c *gin.Context) {
 	`,
 		request.Nama,
 		request.Username,
-		request.Password,
+		hashedPassword,
 		request.Role,
 	).Scan(
 		&user.IDUser,
@@ -107,16 +117,16 @@ func Login(c *gin.Context) {
 	var user models.User
 
 	err := config.DB.QueryRow(context.Background(), `
-		SELECT id_user, nama, username, role
+		SELECT id_user, nama, username, password, role
 		FROM users
-		WHERE username = $1 AND password = $2
+		WHERE username = $1
 	`,
 		request.Username,
-		request.Password,
 	).Scan(
 		&user.IDUser,
 		&user.Nama,
 		&user.Username,
+		&user.Password,
 		&user.Role,
 	)
 
@@ -127,8 +137,50 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	if !utils.CheckPasswordHash(request.Password, user.Password) {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Username atau password salah",
+		})
+		return
+	}
+
+	token, err := utils.GenerateToken(
+		user.IDUser,
+		user.Nama,
+		user.Username,
+		user.Role,
+	)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Gagal membuat token",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	user.Password = ""
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login berhasil",
+		"token":   token,
 		"data":    user,
+	})
+}
+
+func Profile(c *gin.Context) {
+	idUser, _ := c.Get("id_user")
+	nama, _ := c.Get("nama")
+	username, _ := c.Get("username")
+	role, _ := c.Get("role")
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Data profile berhasil diambil",
+		"data": gin.H{
+			"id_user":  idUser,
+			"nama":     nama,
+			"username": username,
+			"role":     role,
+		},
 	})
 }

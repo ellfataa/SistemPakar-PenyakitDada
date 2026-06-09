@@ -30,6 +30,29 @@ func Konsultasi(c *gin.Context) {
 		})
 		return
 	}
+	
+	var countUser int
+
+	err := config.DB.QueryRow(context.Background(), `
+		SELECT COUNT(*)
+		FROM users
+		WHERE id_user = $1
+	`, request.IDUser).Scan(&countUser)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Gagal mengecek data user",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	if countUser == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "User tidak ditemukan",
+		})
+		return
+	}
 
 	if len(request.Gejala) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
