@@ -28,6 +28,10 @@ func SetupRoutes(r *gin.Engine) {
 
 	// USER
 	r.GET("/user/dashboard", controllers.ShowUserDashboard)
+	r.GET("/user/konsultasi", controllers.ShowUserKonsultasiPage)
+	r.GET("/user/hasil/:id_riwayat", controllers.ShowUserHasilPage)
+	r.GET("/user/riwayat", controllers.ShowUserRiwayatPage)
+	r.GET("/user/profile", controllers.ShowUserProfilePage)
 
 
 	r.POST("/register", controllers.Register)

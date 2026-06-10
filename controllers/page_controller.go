@@ -75,3 +75,30 @@ func ShowUserDashboard(c *gin.Context) {
 		"title": "Dashboard User - Sistem Pakar Dada",
 	})
 }
+// User menu Konsultasi
+func ShowUserKonsultasiPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_konsultasi_index.html", gin.H{
+		"title": "Konsultasi - Sistem Pakar Dada",
+	})
+}
+// User menu Hasil Konsultasi
+func ShowUserHasilPage(c *gin.Context) {
+	idRiwayat := c.Param("id_riwayat")
+
+	c.HTML(http.StatusOK, "user_hasil_detail.html", gin.H{
+		"title":      "Hasil Konsultasi - Sistem Pakar Dada",
+		"id_riwayat": idRiwayat,
+	})
+}
+// User menu Riwayat Konsultasi
+func ShowUserRiwayatPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_riwayat_index.html", gin.H{
+		"title": "Riwayat Konsultasi - Sistem Pakar Dada",
+	})
+}
+// User menu Profile
+func ShowUserProfilePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_profile_index.html", gin.H{
+		"title": "Profil User - Sistem Pakar Dada",
+	})
+}
