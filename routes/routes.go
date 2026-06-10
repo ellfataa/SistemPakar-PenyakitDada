@@ -10,6 +10,26 @@ import (
 func SetupRoutes(r *gin.Engine) {
 	r.GET("/", controllers.Home)
 
+	// Frontend
+	r.GET("/login-page", controllers.ShowLoginPage)
+	r.GET("/register-page", controllers.ShowRegisterPage)
+	// ADMIN
+	r.GET("/admin/dashboard", controllers.ShowAdminDashboard)
+	// menu Gejala
+	r.GET("/admin/gejala", controllers.ShowAdminGejalaPage)
+	r.GET("/admin/gejala/create", controllers.ShowAdminCreateGejalaPage)
+	r.GET("/admin/gejala/edit/:kode_gejala", controllers.ShowAdminEditGejalaPage)
+	// menu Penyakit
+	r.GET("/admin/penyakit", controllers.ShowAdminPenyakitPage)
+	r.GET("/admin/penyakit/create", controllers.ShowAdminCreatePenyakitPage)
+	r.GET("/admin/penyakit/edit/:kode_penyakit", controllers.ShowAdminEditPenyakitPage)
+	// menu Relasi
+	r.GET("/admin/relasi", controllers.ShowAdminRelasiPage)
+
+	// USER
+	r.GET("/user/dashboard", controllers.ShowUserDashboard)
+
+
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 

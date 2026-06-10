@@ -1,0 +1,16 @@
+body {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+input {
+    transition: 0.2s ease;
+}
+
+button {
+    transition: 0.2s ease;
+}
+
+.card-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+}

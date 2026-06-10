@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <div class="text-center mb-8">
+            <div class="mx-auto w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                <span class="text-2xl">🫁</span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800">Register Akun</h1>
+            <p class="text-sm text-slate-500 mt-2">Buat akun untuk menggunakan sistem pakar</p>
+        </div>
+
+        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+
+        <form id="registerForm" class="space-y-5">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                <input
+                    type="text"
+                    id="nama"
+                    class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan nama lengkap"
+                    required
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan username"
+                    required
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3 transition">
+                Register
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-slate-500 mt-6">
+            Sudah punya akun?
+            <a href="/login-page" class="text-blue-600 font-semibold hover:underline">Login</a>
+        </p>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById("registerForm");
+        const alertBox = document.getElementById("alertBox");
+
+        function showAlert(message, type = "error") {
+            alertBox.classList.remove("hidden");
+            alertBox.textContent = message;
+
+            if (type === "success") {
+                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+            } else {
+                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+            }
+        }
+
+        registerForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById("nama").value;
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch("/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        nama,
+                        username,
+                        password,
+                        role: "user"
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showAlert(result.message || "Register gagal");
+                    return;
+                }
+
+                showAlert("Register berhasil, silakan login", "success");
+
+                setTimeout(() => {
+                    window.location.href = "/login-page";
+                }, 1000);
+
+            } catch (error) {
+                showAlert("Terjadi kesalahan koneksi ke server");
+            }
+        });
+    </script>
+</body>
+</html>

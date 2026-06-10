@@ -1,0 +1,389 @@
+{{ define "admin_gejala_index.html" }}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="min-h-screen bg-slate-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
+                <p class="text-sm text-slate-500">Kelola Data Gejala</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="/admin/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">
+                    Dashboard
+                </a>
+
+                <div class="text-right">
+                    <p id="adminName" class="text-sm font-semibold text-slate-700">Admin</p>
+                    <p id="adminRole" class="text-xs text-slate-500">role</p>
+                </div>
+
+                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+
+        <!-- Header -->
+        <section class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800">Data Gejala</h2>
+                <p class="text-slate-500 mt-1">Tambah, edit, dan hapus gejala penyakit dada.</p>
+            </div>
+
+            <a
+                href="/admin/gejala/create"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold">
+                + Tambah Gejala
+            </a>
+        </section>
+
+        <!-- Alert -->
+        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+
+        <!-- Table -->
+        <section class="bg-white rounded-2xl shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">No</th>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Kode Gejala</th>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Nama Gejala</th>
+                            <th class="px-6 py-4 text-right font-semibold text-slate-600">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gejalaTableBody" class="divide-y divide-slate-100">
+                        <tr>
+                            <td colspan="4" class="px-6 py-6 text-center text-slate-500">
+                                Memuat data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="gejalaModal" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+            <div class="flex items-center justify-between mb-5">
+                <h3 id="modalTitle" class="text-xl font-bold text-slate-800">Tambah Gejala</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 text-2xl">
+                    &times;
+                </button>
+            </div>
+
+            <form id="gejalaForm" class="space-y-4">
+                <input type="hidden" id="formMode" value="create">
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Kode Gejala
+                    </label>
+                    <input
+                        type="text"
+                        id="kodeGejala"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Contoh: G99"
+                        required
+                    >
+                    <p class="text-xs text-slate-400 mt-1">
+                        Kode gejala hanya bisa diisi saat tambah data.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Nama Gejala
+                    </label>
+                    <textarea
+                        id="namaGejala"
+                        rows="3"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Masukkan nama gejala"
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button
+                        type="button"
+                        onclick="closeModal()"
+                        class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 font-semibold">
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        const tableBody = document.getElementById("gejalaTableBody");
+        const alertBox = document.getElementById("alertBox");
+        const modal = document.getElementById("gejalaModal");
+        const form = document.getElementById("gejalaForm");
+
+        const formMode = document.getElementById("formMode");
+        const modalTitle = document.getElementById("modalTitle");
+        const kodeGejala = document.getElementById("kodeGejala");
+        const namaGejala = document.getElementById("namaGejala");
+
+        if (!token || !user) {
+            window.location.href = "/login-page";
+        }
+
+        if (user.role !== "admin" && user.role !== "pakar") {
+            window.location.href = "/user/dashboard";
+        }
+
+        document.getElementById("adminName").textContent = user.nama;
+        document.getElementById("adminRole").textContent = user.role;
+
+        function showAlert(message, type = "success") {
+            alertBox.classList.remove("hidden");
+            alertBox.textContent = message;
+
+            if (type === "success") {
+                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+            } else {
+                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+            }
+
+            setTimeout(() => {
+                alertBox.classList.add("hidden");
+            }, 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "/login-page";
+        }
+
+        function escapeHTML(text) {
+            if (!text) return "";
+
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function decodeHTML(text) {
+            const textarea = document.createElement("textarea");
+            textarea.innerHTML = text;
+            return textarea.value;
+        }
+
+        async function loadGejala() {
+            try {
+                const response = await fetch("/gejala");
+                const result = await response.json();
+
+                if (!response.ok) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="px-6 py-6 text-center text-red-500">
+                                ${result.message || "Gagal mengambil data gejala"}
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                if (!result.data || result.data.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="px-6 py-6 text-center text-slate-500">
+                                Belum ada data gejala
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tableBody.innerHTML = result.data.map((item, index) => {
+                    const namaAman = escapeHTML(item.nama_gejala);
+
+                    return `
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4 text-slate-600">${index + 1}</td>
+                            <td class="px-6 py-4 font-semibold text-slate-800">${item.kode_gejala}</td>
+                            <td class="px-6 py-4 text-slate-700">${namaAman}</td>
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <a
+                                    href="/admin/gejala/edit/${item.kode_gejala}"
+                                    class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-2 rounded-lg text-xs font-semibold">
+                                    Edit
+                                </a>
+
+                                <button
+                                    onclick="deleteGejala('${item.kode_gejala}')"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold ml-2">
+                                    Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+
+            } catch (error) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-6 text-center text-red-500">
+                            Terjadi kesalahan koneksi ke server
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function openCreateModal() {
+            formMode.value = "create";
+            modalTitle.textContent = "Tambah Gejala";
+
+            kodeGejala.value = "";
+            namaGejala.value = "";
+
+            kodeGejala.disabled = false;
+            kodeGejala.classList.remove("bg-slate-100", "cursor-not-allowed");
+
+            modal.classList.remove("hidden");
+        }
+
+        function openEditModal(kode, nama) {
+            formMode.value = "edit";
+            modalTitle.textContent = "Edit Gejala";
+
+            kodeGejala.value = kode;
+            namaGejala.value = decodeHTML(nama);
+
+            kodeGejala.disabled = true;
+            kodeGejala.classList.add("bg-slate-100", "cursor-not-allowed");
+
+            modal.classList.remove("hidden");
+        }
+
+        function closeModal() {
+            modal.classList.add("hidden");
+        }
+
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const mode = formMode.value;
+            const kode = kodeGejala.value.trim();
+            const nama = namaGejala.value.trim();
+
+            if (!kode || !nama) {
+                showAlert("Kode gejala dan nama gejala wajib diisi", "error");
+                return;
+            }
+
+            const url = mode === "create" ? "/gejala" : `/gejala/${kode}`;
+            const method = mode === "create" ? "POST" : "PUT";
+
+            const body = mode === "create"
+                ? {
+                    kode_gejala: kode,
+                    nama_gejala: nama
+                }
+                : {
+                    nama_gejala: nama
+                };
+
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showAlert(result.message || "Gagal menyimpan data gejala", "error");
+                    return;
+                }
+
+                closeModal();
+                showAlert(result.message || "Data gejala berhasil disimpan");
+                loadGejala();
+
+            } catch (error) {
+                showAlert("Terjadi kesalahan koneksi ke server", "error");
+            }
+        });
+
+        async function deleteGejala(kode) {
+            const confirmDelete = confirm(`Yakin ingin menghapus gejala ${kode}?`);
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/gejala/${kode}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showAlert(result.message || "Gagal menghapus data gejala", "error");
+                    return;
+                }
+
+                showAlert(result.message || "Data gejala berhasil dihapus");
+                loadGejala();
+
+            } catch (error) {
+                showAlert("Terjadi kesalahan koneksi ke server", "error");
+            }
+        }
+
+        loadGejala();
+    </script>
+</body>
+</html>
+{{ end }}
