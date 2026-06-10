@@ -1,4 +1,4 @@
-{{ define "admin_penyakit_index.html" }}
+{{ define "admin_users_index.html" }}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -15,11 +15,15 @@
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
-                <p class="text-sm text-slate-500">Kelola Data Penyakit</p>
+                <p class="text-sm text-slate-500">Manajemen User</p>
             </div>
 
             <div class="flex items-center gap-4">
                 <a href="/admin/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">Dashboard</a>
+                <a href="/admin/gejala" class="text-sm font-semibold text-blue-600 hover:underline">Gejala</a>
+                <a href="/admin/penyakit" class="text-sm font-semibold text-blue-600 hover:underline">Penyakit</a>
+                <a href="/admin/relasi" class="text-sm font-semibold text-blue-600 hover:underline">Relasi</a>
+                <a href="/admin/profile" class="text-sm font-semibold text-blue-600 hover:underline">Profil</a>
 
                 <div class="text-right">
                     <p id="adminName" class="text-sm font-semibold text-slate-700">Admin</p>
@@ -36,31 +40,61 @@
     <main class="max-w-7xl mx-auto px-6 py-8">
         <section class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-slate-800">Data Penyakit</h2>
-                <p class="text-slate-500 mt-1">Tambah, edit, dan hapus data penyakit dada.</p>
+                <h2 class="text-2xl font-bold text-slate-800">Manajemen User</h2>
+                <p class="text-slate-500 mt-1">Kelola akun admin, pakar, dan user.</p>
             </div>
 
-            <a href="/admin/penyakit/create" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold">
-                + Tambah Penyakit
+            <a href="/admin/users/create" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold">
+                + Tambah User
             </a>
         </section>
 
         <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
 
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-2xl shadow p-5">
+                <p class="text-sm text-slate-500">Total User</p>
+                <p id="totalUser" class="text-3xl font-bold text-slate-800 mt-1">0</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow p-5">
+                <p class="text-sm text-slate-500">Admin</p>
+                <p id="totalAdmin" class="text-3xl font-bold text-blue-600 mt-1">0</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow p-5">
+                <p class="text-sm text-slate-500">User</p>
+                <p id="totalRoleUser" class="text-3xl font-bold text-green-600 mt-1">0</p>
+            </div>
+        </section>
+
         <section class="bg-white rounded-2xl shadow overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">Daftar Akun</h3>
+                    <p class="text-sm text-slate-500">Data akun yang terdaftar pada sistem.</p>
+                </div>
+
+                <button
+                    onclick="loadUsers()"
+                    class="border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">
+                    Refresh
+                </button>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
                             <th class="px-6 py-4 text-left font-semibold text-slate-600">No</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Kode</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Nama Penyakit</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Deskripsi</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Solusi</th>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">ID</th>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Nama</th>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Username</th>
+                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Role</th>
                             <th class="px-6 py-4 text-right font-semibold text-slate-600">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="penyakitTableBody" class="divide-y divide-slate-100">
+                    <tbody id="usersTableBody" class="divide-y divide-slate-100">
                         <tr>
                             <td colspan="6" class="px-6 py-6 text-center text-slate-500">
                                 Memuat data...
@@ -76,8 +110,8 @@
         const token = localStorage.getItem("token");
         const user = JSON.parse(localStorage.getItem("user") || "null");
 
-        const tableBody = document.getElementById("penyakitTableBody");
         const alertBox = document.getElementById("alertBox");
+        const tableBody = document.getElementById("usersTableBody");
 
         if (!token || !user) {
             window.location.href = "/login-page";
@@ -121,60 +155,89 @@
                 .replace(/'/g, "&#039;");
         }
 
-        function limitText(text, max = 80) {
-            if (!text) return "-";
-            return text.length > max ? text.substring(0, max) + "..." : text;
+        function roleBadge(role) {
+            if (role === "admin") {
+                return "bg-blue-100 text-blue-700 border-blue-200";
+            }
+
+            return "bg-green-100 text-green-700 border-green-200";
         }
 
-        async function loadPenyakit() {
+        function roleLabel(role) {
+            if (role === "admin") {
+                return "Admin";
+            }
+
+            return "User / Pakar";
+        }
+
+        async function loadUsers() {
             try {
-                const response = await fetch("/penyakit");
+                const response = await fetch("/users", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
                 const result = await response.json();
 
                 if (!response.ok) {
                     tableBody.innerHTML = `
                         <tr>
                             <td colspan="6" class="px-6 py-6 text-center text-red-500">
-                                ${result.message || "Gagal mengambil data penyakit"}
+                                ${result.message || "Gagal mengambil data user"}
                             </td>
                         </tr>
                     `;
                     return;
                 }
 
-                if (!result.data || result.data.length === 0) {
+                const users = result.data || [];
+
+                document.getElementById("totalUser").textContent = users.length;
+                document.getElementById("totalAdmin").textContent = users.filter(item => item.role === "admin").length;
+                document.getElementById("totalRoleUser").textContent = users.filter(item => item.role === "user").length;
+
+                if (users.length === 0) {
                     tableBody.innerHTML = `
                         <tr>
                             <td colspan="6" class="px-6 py-6 text-center text-slate-500">
-                                Belum ada data penyakit
+                                Belum ada data user
                             </td>
                         </tr>
                     `;
                     return;
                 }
 
-                tableBody.innerHTML = result.data.map((item, index) => {
-                    const nama = escapeHTML(item.nama_penyakit);
-                    const deskripsi = escapeHTML(limitText(item.deskripsi));
-                    const solusi = escapeHTML(limitText(item.solusi));
+                tableBody.innerHTML = users.map((item, index) => {
+                    const isCurrentUser = item.id_user === user.id_user;
 
                     return `
-                        <tr class="hover:bg-slate-50 align-top">
+                        <tr class="hover:bg-slate-50">
                             <td class="px-6 py-4 text-slate-600">${index + 1}</td>
-                            <td class="px-6 py-4 font-semibold text-slate-800">${item.kode_penyakit}</td>
-                            <td class="px-6 py-4 text-slate-700 font-medium">${nama}</td>
-                            <td class="px-6 py-4 text-slate-600 max-w-xs">${deskripsi}</td>
-                            <td class="px-6 py-4 text-slate-600 max-w-xs">${solusi}</td>
+                            <td class="px-6 py-4 font-semibold text-slate-800">${item.id_user}</td>
+                            <td class="px-6 py-4 text-slate-700 font-medium">
+                                ${escapeHTML(item.nama)}
+                                ${isCurrentUser ? `<span class="ml-2 text-xs text-blue-600 font-semibold">(Anda)</span>` : ""}
+                            </td>
+                            <td class="px-6 py-4 text-slate-600">@${escapeHTML(item.username)}</td>
+                            <td class="px-6 py-4">
+                                <span class="rounded-full border px-3 py-1 text-xs font-semibold ${roleBadge(item.role)}">
+                                    ${roleLabel(item.role)}
+                                </span>
+                            </td>
                             <td class="px-6 py-4 text-right whitespace-nowrap">
                                 <a
-                                    href="/admin/penyakit/edit/${item.kode_penyakit}"
+                                    href="/admin/users/edit/${item.id_user}"
                                     class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-2 rounded-lg text-xs font-semibold">
                                     Edit
                                 </a>
 
                                 <button
-                                    onclick="deletePenyakit('${item.kode_penyakit}')"
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold ml-2">
+                                    onclick="deleteUser(${item.id_user})"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold ml-2 ${isCurrentUser ? 'opacity-50 cursor-not-allowed' : ''}"
+                                    ${isCurrentUser ? "disabled" : ""}>
                                     Hapus
                                 </button>
                             </td>
@@ -193,12 +256,12 @@
             }
         }
 
-        async function deletePenyakit(kode) {
-            const confirmDelete = confirm(`Yakin ingin menghapus penyakit ${kode}?`);
+        async function deleteUser(idUser) {
+            const confirmDelete = confirm(`Yakin ingin menghapus user dengan ID ${idUser}?`);
             if (!confirmDelete) return;
 
             try {
-                const response = await fetch(`/penyakit/${kode}`, {
+                const response = await fetch(`/users/${idUser}`, {
                     method: "DELETE",
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -208,19 +271,19 @@
                 const result = await response.json();
 
                 if (!response.ok) {
-                    showAlert(result.message || "Gagal menghapus data penyakit", "error");
+                    showAlert(result.message || "Gagal menghapus user", "error");
                     return;
                 }
 
-                showAlert(result.message || "Data penyakit berhasil dihapus");
-                loadPenyakit();
+                showAlert(result.message || "User berhasil dihapus");
+                loadUsers();
 
             } catch (error) {
                 showAlert("Terjadi kesalahan koneksi ke server", "error");
             }
         }
 
-        loadPenyakit();
+        loadUsers();
     </script>
 </body>
 </html>

@@ -68,6 +68,37 @@ func ShowAdminRelasiPage(c *gin.Context) {
 		"title": "Relasi Penyakit dan Gejala - Sistem Pakar Dada",
 	})
 }
+// Admin menu Profile
+func ShowAdminProfilePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_profile_index.html", gin.H{
+		"title": "Profil Admin - Sistem Pakar Dada",
+	})
+}
+// Admin menu Update Profile
+func ShowAdminEditProfilePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_profile_edit.html", gin.H{
+		"title": "Edit Profil Admin - Sistem Pakar Dada",
+	})
+}
+// Admin menu Manajemen User
+func ShowAdminUsersPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_users_index.html", gin.H{
+		"title": "Manajemen User - Sistem Pakar Dada",
+	})
+}
+func ShowAdminCreateUserPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_users_create.html", gin.H{
+		"title": "Tambah User - Sistem Pakar Dada",
+	})
+}
+func ShowAdminEditUserPage(c *gin.Context) {
+	idUser := c.Param("id_user")
+
+	c.HTML(http.StatusOK, "admin_users_edit.html", gin.H{
+		"title":   "Edit User - Sistem Pakar Dada",
+		"id_user": idUser,
+	})
+}
 
 // USER
 func ShowUserDashboard(c *gin.Context) {
@@ -100,5 +131,11 @@ func ShowUserRiwayatPage(c *gin.Context) {
 func ShowUserProfilePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "user_profile_index.html", gin.H{
 		"title": "Profil User - Sistem Pakar Dada",
+	})
+}
+// User menu Update Profile
+func ShowUserEditProfilePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_profile_edit.html", gin.H{
+		"title": "Edit Profil - Sistem Pakar Dada",
 	})
 }

@@ -25,6 +25,13 @@ func SetupRoutes(r *gin.Engine) {
 	r.GET("/admin/penyakit/edit/:kode_penyakit", controllers.ShowAdminEditPenyakitPage)
 	// menu Relasi
 	r.GET("/admin/relasi", controllers.ShowAdminRelasiPage)
+	// menu Profile Admin
+	r.GET("/admin/profile", controllers.ShowAdminProfilePage)
+	r.GET("/admin/profile/edit", controllers.ShowAdminEditProfilePage)
+	// menu Manajemen Users
+	r.GET("/admin/users", controllers.ShowAdminUsersPage)
+	r.GET("/admin/users/create", controllers.ShowAdminCreateUserPage)
+	r.GET("/admin/users/edit/:id_user", controllers.ShowAdminEditUserPage)
 
 	// USER
 	r.GET("/user/dashboard", controllers.ShowUserDashboard)
@@ -32,6 +39,7 @@ func SetupRoutes(r *gin.Engine) {
 	r.GET("/user/hasil/:id_riwayat", controllers.ShowUserHasilPage)
 	r.GET("/user/riwayat", controllers.ShowUserRiwayatPage)
 	r.GET("/user/profile", controllers.ShowUserProfilePage)
+	r.GET("/user/profile/edit", controllers.ShowUserEditProfilePage)
 
 
 	r.POST("/register", controllers.Register)
@@ -52,17 +60,24 @@ func SetupRoutes(r *gin.Engine) {
 	userRoutes.Use(middlewares.AuthMiddleware())
 	{
 		userRoutes.GET("/profile", controllers.Profile)
+		userRoutes.PUT("/profile", controllers.UpdateProfile)
 
 		userRoutes.POST("/konsultasi", controllers.Konsultasi)
 		userRoutes.GET("/hasil-konsultasi/:id_riwayat", controllers.GetHasilKonsultasi)
 		userRoutes.GET("/riwayat/:id_user", controllers.GetRiwayatByUser)
 	}
 
-	// Admin dan Pakar routes
+	// Admin routes
 	adminRoutes := r.Group("/")
 	adminRoutes.Use(middlewares.AuthMiddleware())
-	adminRoutes.Use(middlewares.RoleMiddleware("admin", "pakar"))
+	adminRoutes.Use(middlewares.RoleMiddleware("admin"))
 	{
+		adminRoutes.GET("/users", controllers.GetUsers)
+		adminRoutes.GET("/users/:id_user", controllers.GetUserByID)
+		adminRoutes.POST("/users", controllers.CreateUser)
+		adminRoutes.PUT("/users/:id_user", controllers.UpdateUser)
+		adminRoutes.DELETE("/users/:id_user", controllers.DeleteUser)
+
 		adminRoutes.POST("/gejala", controllers.CreateGejala)
 		adminRoutes.PUT("/gejala/:kode_gejala", controllers.UpdateGejala)
 		adminRoutes.DELETE("/gejala/:kode_gejala", controllers.DeleteGejala)

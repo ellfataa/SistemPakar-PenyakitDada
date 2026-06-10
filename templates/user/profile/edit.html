@@ -1,0 +1,236 @@
+{{ define "user_profile_edit.html" }}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="min-h-screen bg-slate-100">
+
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
+                <p class="text-sm text-slate-500">Edit Profil User</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="/user/profile" class="text-sm font-semibold text-blue-600 hover:underline">
+                    Profil
+                </a>
+
+                <a href="/user/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">
+                    Dashboard
+                </a>
+
+                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto px-6 py-8">
+        <section class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-800">Edit Profil</h2>
+            <p class="text-slate-500 mt-1">
+                Perbarui nama, username, atau password akun Anda.
+            </p>
+        </section>
+
+        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+
+        <section id="loadingBox" class="bg-white rounded-2xl shadow p-8 text-center text-slate-500">
+            Memuat data profil...
+        </section>
+
+        <section id="formBox" class="hidden bg-white rounded-2xl shadow p-6">
+            <form id="editProfileForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                    <input
+                        type="text"
+                        id="nama"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Masukkan nama lengkap"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Masukkan username"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
+                    <input
+                        type="password"
+                        id="passwordBaru"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Kosongkan jika tidak ingin mengganti password"
+                    >
+                    <p class="text-xs text-slate-400 mt-1">
+                        Kosongkan field ini jika tidak ingin mengubah password.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password Baru</label>
+                    <input
+                        type="password"
+                        id="konfirmasiPassword"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ulangi password baru"
+                    >
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-end gap-3 pt-2">
+                    <a href="/user/profile" class="text-center px-5 py-3 rounded-xl border border-slate-300 text-slate-600 font-semibold">
+                        Batal
+                    </a>
+
+                    <button type="submit" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        const alertBox = document.getElementById("alertBox");
+        const loadingBox = document.getElementById("loadingBox");
+        const formBox = document.getElementById("formBox");
+        const form = document.getElementById("editProfileForm");
+
+        const namaInput = document.getElementById("nama");
+        const usernameInput = document.getElementById("username");
+        const passwordBaruInput = document.getElementById("passwordBaru");
+        const konfirmasiPasswordInput = document.getElementById("konfirmasiPassword");
+
+        if (!token || !user) {
+            window.location.href = "/login-page";
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "/login-page";
+        }
+
+        function showAlert(message, type = "error") {
+            alertBox.classList.remove("hidden");
+            alertBox.textContent = message;
+
+            if (type === "success") {
+                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+            } else {
+                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                const response = await fetch("/profile", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const result = await response.json();
+
+                loadingBox.classList.add("hidden");
+
+                if (!response.ok) {
+                    showAlert(result.message || "Gagal mengambil data profil");
+                    return;
+                }
+
+                namaInput.value = result.data.nama || "";
+                usernameInput.value = result.data.username || "";
+
+                formBox.classList.remove("hidden");
+
+            } catch (error) {
+                loadingBox.classList.add("hidden");
+                showAlert("Terjadi kesalahan koneksi ke server");
+            }
+        }
+
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const nama = namaInput.value.trim();
+            const username = usernameInput.value.trim();
+            const passwordBaru = passwordBaruInput.value.trim();
+            const konfirmasiPassword = konfirmasiPasswordInput.value.trim();
+
+            if (!nama || !username) {
+                showAlert("Nama dan username wajib diisi");
+                return;
+            }
+
+            if (passwordBaru !== "" && passwordBaru.length < 6) {
+                showAlert("Password baru minimal 6 karakter");
+                return;
+            }
+
+            if (passwordBaru !== konfirmasiPassword) {
+                showAlert("Konfirmasi password tidak sesuai");
+                return;
+            }
+
+            try {
+                const response = await fetch("/profile", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        nama: nama,
+                        username: username,
+                        password_baru: passwordBaru
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showAlert(result.message || "Gagal memperbarui profil");
+                    return;
+                }
+
+                localStorage.setItem("user", JSON.stringify(result.data));
+
+                showAlert("Profil berhasil diperbarui", "success");
+
+                setTimeout(() => {
+                    window.location.href = "/user/profile";
+                }, 900);
+
+            } catch (error) {
+                showAlert("Terjadi kesalahan koneksi ke server");
+            }
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>
+{{ end }}

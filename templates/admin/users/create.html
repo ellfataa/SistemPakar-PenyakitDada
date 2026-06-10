@@ -1,4 +1,4 @@
-{{ define "admin_penyakit_create.html" }}
+{{ define "admin_users_create.html" }}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -15,11 +15,12 @@
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
-                <p class="text-sm text-slate-500">Tambah Data Penyakit</p>
+                <p class="text-sm text-slate-500">Tambah User</p>
             </div>
 
             <div class="flex items-center gap-4">
-                <a href="/admin/penyakit" class="text-sm font-semibold text-blue-600 hover:underline">Kembali</a>
+                <a href="/admin/users" class="text-sm font-semibold text-blue-600 hover:underline">Manajemen User</a>
+                <a href="/admin/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">Dashboard</a>
 
                 <div class="text-right">
                     <p id="adminName" class="text-sm font-semibold text-slate-700">Admin</p>
@@ -35,63 +36,66 @@
 
     <main class="max-w-3xl mx-auto px-6 py-8">
         <section class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">Tambah Penyakit</h2>
-            <p class="text-slate-500 mt-1">Masukkan data penyakit, deskripsi, dan solusi.</p>
+            <h2 class="text-2xl font-bold text-slate-800">Tambah User</h2>
+            <p class="text-slate-500 mt-1">Tambahkan akun baru ke dalam sistem.</p>
         </section>
 
         <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
 
         <section class="bg-white rounded-2xl shadow p-6">
-            <form id="createPenyakitForm" class="space-y-5">
+            <form id="createUserForm" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Kode Penyakit</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
                     <input
                         type="text"
-                        id="kodePenyakit"
+                        id="nama"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Contoh: P99"
+                        placeholder="Masukkan nama lengkap"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Penyakit</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
                     <input
                         type="text"
-                        id="namaPenyakit"
+                        id="username"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama penyakit"
+                        placeholder="Masukkan username"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Deskripsi</label>
-                    <textarea
-                        id="deskripsi"
-                        rows="4"
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                    <input
+                        type="password"
+                        id="password"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi penyakit"
-                    ></textarea>
+                        placeholder="Minimal 6 karakter"
+                        required
+                    >
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Solusi</label>
-                    <textarea
-                        id="solusi"
-                        rows="4"
-                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan solusi atau saran penanganan"
-                    ></textarea>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                    <select
+                        id="role"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                        <option value="">Pilih Role</option>
+                        <option value="user">User/Pakar</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
 
-                <div class="flex justify-end gap-3">
-                    <a href="/admin/penyakit" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 font-semibold">
+                <div class="flex flex-col md:flex-row justify-end gap-3 pt-2">
+                    <a href="/admin/users" class="text-center px-5 py-3 rounded-xl border border-slate-300 text-slate-600 font-semibold">
                         Batal
                     </a>
 
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                        Simpan
+                    <button type="submit" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                        Simpan User
                     </button>
                 </div>
             </form>
@@ -101,6 +105,9 @@
     <script>
         const token = localStorage.getItem("token");
         const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        const alertBox = document.getElementById("alertBox");
+        const form = document.getElementById("createUserForm");
 
         if (!token || !user) {
             window.location.href = "/login-page";
@@ -113,8 +120,11 @@
         document.getElementById("adminName").textContent = user.nama;
         document.getElementById("adminRole").textContent = user.role;
 
-        const form = document.getElementById("createPenyakitForm");
-        const alertBox = document.getElementById("alertBox");
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "/login-page";
+        }
 
         function showAlert(message, type = "error") {
             alertBox.classList.remove("hidden");
@@ -127,51 +137,50 @@
             }
         }
 
-        function logout() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.location.href = "/login-page";
-        }
-
         form.addEventListener("submit", async function(e) {
             e.preventDefault();
 
-            const kodePenyakit = document.getElementById("kodePenyakit").value.trim();
-            const namaPenyakit = document.getElementById("namaPenyakit").value.trim();
-            const deskripsi = document.getElementById("deskripsi").value.trim();
-            const solusi = document.getElementById("solusi").value.trim();
+            const nama = document.getElementById("nama").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const role = document.getElementById("role").value;
 
-            if (!kodePenyakit || !namaPenyakit) {
-                showAlert("Kode penyakit dan nama penyakit wajib diisi");
+            if (!nama || !username || !password || !role) {
+                showAlert("Semua field wajib diisi");
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert("Password minimal 6 karakter");
                 return;
             }
 
             try {
-                const response = await fetch("/penyakit", {
+                const response = await fetch("/users", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        kode_penyakit: kodePenyakit,
-                        nama_penyakit: namaPenyakit,
-                        deskripsi: deskripsi,
-                        solusi: solusi
+                        nama: nama,
+                        username: username,
+                        password: password,
+                        role: role
                     })
                 });
 
                 const result = await response.json();
 
                 if (!response.ok) {
-                    showAlert(result.message || "Gagal menambahkan data penyakit");
+                    showAlert(result.message || "Gagal menambahkan user");
                     return;
                 }
 
-                showAlert("Data penyakit berhasil ditambahkan", "success");
+                showAlert("User berhasil ditambahkan", "success");
 
                 setTimeout(() => {
-                    window.location.href = "/admin/penyakit";
+                    window.location.href = "/admin/users";
                 }, 800);
 
             } catch (error) {

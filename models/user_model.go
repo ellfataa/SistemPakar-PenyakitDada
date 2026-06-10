@@ -19,3 +19,17 @@ type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+type UserRequest struct {
+	Nama     string `json:"nama"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+}
+
+type UpdateUserRequest struct {
+	Nama     string `json:"nama"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+}
