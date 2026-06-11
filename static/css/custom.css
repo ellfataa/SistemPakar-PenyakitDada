@@ -1,16 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    font-family: 'Inter', sans-serif;
+}
+
 body {
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #ffffff;
+    color: #1e293b;
 }
 
-input {
-    transition: 0.2s ease;
+.app-bg {
+    background:
+        radial-gradient(circle at top left, rgba(236, 72, 153, 0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(147, 51, 234, 0.10), transparent 28%),
+        #ffffff;
 }
 
-button {
-    transition: 0.2s ease;
+.glass-nav {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
 }
 
-.card-glass {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
+.card-modern {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 1.5rem;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+    transition: all 0.25s ease;
+}
+
+.card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 50px rgba(147, 51, 234, 0.12);
+    border-color: rgba(216, 180, 254, 0.8);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 0.9rem;
+    padding: 0.75rem 1.2rem;
+    transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(236, 72, 153, 0.28);
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #7e22ce;
+    font-weight: 700;
+    border: 1px solid #e9d5ff;
+    border-radius: 0.9rem;
+    padding: 0.75rem 1.2rem;
+    transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+    background: #faf5ff;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 0.9rem;
+    padding: 0.75rem 1.2rem;
+    transition: all 0.25s ease;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.nav-link {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #9333ea;
+}
+
+.nav-link-active {
+    color: #9333ea;
+    background: #faf5ff;
+    border: 1px solid #f3e8ff;
+    border-radius: 999px;
+    padding: 0.5rem 0.9rem;
+}
+
+.badge-purple {
+    background: #faf5ff;
+    color: #7e22ce;
+    border: 1px solid #f3e8ff;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.badge-pink {
+    background: #fdf2f8;
+    color: #db2777;
+    border: 1px solid #fbcfe8;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.input-modern {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+.input-modern:focus {
+    border-color: #c084fc;
+    box-shadow: 0 0 0 4px rgba(192, 132, 252, 0.18);
+}
+
+.table-head {
+    background: #faf5ff;
+    color: #6b21a8;
+}
+
+.page-title-gradient {
+    background: linear-gradient(135deg, #7e22ce, #ec4899);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.soft-divider {
+    border-color: #f1f5f9;
 }

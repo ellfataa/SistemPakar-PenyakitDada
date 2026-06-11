@@ -9,137 +9,147 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/custom.css">
 </head>
-<body class="min-h-screen bg-slate-100">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
-                <p class="text-sm text-slate-500">Profil Admin</p>
+<body class="min-h-screen app-bg text-slate-800">
+
+    {{ template "admin_navbar.html" . }}
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <section class="mb-8">
+            <div class="card-modern p-7 md:p-8 overflow-hidden relative">
+                <div class="absolute -right-12 -top-12 w-52 h-52 rounded-full bg-pink-100 blur-3xl"></div>
+                <div class="absolute right-32 -bottom-14 w-48 h-48 rounded-full bg-purple-100 blur-3xl"></div>
+
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div>
+                        <span class="inline-flex badge-purple px-4 py-2 text-xs mb-4">
+                            Profil Admin
+                        </span>
+
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight">
+                            Informasi Akun Admin
+                        </h2>
+
+                        <p class="text-slate-500 mt-3 max-w-2xl leading-relaxed">
+                            Lihat detail akun admin yang sedang digunakan untuk mengelola sistem pakar penyakit dada.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="/admin/profile/edit" class="btn-primary text-center">
+                            Edit Profil
+                        </a>
+
+                    </div>
+                </div>
             </div>
-
-            <div class="flex items-center gap-4">
-                <a href="/admin/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Dashboard
-                </a>
-
-                <a href="/admin/gejala" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Gejala
-                </a>
-
-                <a href="/admin/penyakit" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Penyakit
-                </a>
-
-                <a href="/admin/relasi" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Relasi
-                </a>
-
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
-                    Logout
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-5xl mx-auto px-6 py-8">
-        <section class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">Profil Admin</h2>
-            <p class="text-slate-500 mt-1">
-                Informasi akun admin yang sedang login.
-            </p>
         </section>
 
-        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+        <div id="alertBox" class="hidden mb-5 rounded-xl px-4 py-3 text-sm"></div>
 
-        <section id="loadingBox" class="bg-white rounded-2xl shadow p-8 text-center text-slate-500">
+        <section id="loadingBox" class="card-modern p-8 text-center text-slate-500">
             Memuat data profil...
         </section>
 
         <section id="profileBox" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white rounded-2xl shadow p-6 lg:col-span-1">
+
+            <div class="card-modern p-7 lg:col-span-1">
                 <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-4xl mb-4">
-                        🛡️
+                    <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-pink-100 mb-5">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3 5 6v5c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12.5 11.3 14.3 15 10" />
+                        </svg>
                     </div>
 
-                    <h3 id="profileNamaHeader" class="text-xl font-bold text-slate-800">-</h3>
-                    <p id="profileUsernameHeader" class="text-sm text-slate-500 mt-1">-</p>
+                    <h3 id="profileNamaHeader" class="text-xl font-extrabold text-slate-950">
+                        -
+                    </h3>
 
-                    <span id="profileRoleBadge" class="mt-4 inline-flex rounded-full bg-blue-100 text-blue-700 px-4 py-1 text-sm font-semibold">
+                    <p id="profileUsernameHeader" class="text-sm text-slate-500 mt-1">
+                        -
+                    </p>
+
+                    <span id="profileRoleBadge" class="mt-4 inline-flex badge-purple px-4 py-2 text-xs">
                         -
                     </span>
+
+                    <div class="w-full mt-6 pt-6 border-t border-slate-100">
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Akun ini memiliki hak akses penuh untuk mengelola data master, knowledge base, dan user sistem.
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow p-6 lg:col-span-2">
-                <h3 class="text-lg font-bold text-slate-800 mb-5">Detail Akun</h3>
-
-                <div class="space-y-4">
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">ID User</p>
-                        <p id="profileID" class="font-bold text-slate-800 mt-1">-</p>
-                    </div>
-
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">Nama Lengkap</p>
-                        <p id="profileNama" class="font-bold text-slate-800 mt-1">-</p>
-                    </div>
-
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">Username</p>
-                        <p id="profileUsername" class="font-bold text-slate-800 mt-1">-</p>
-                    </div>
-
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">Role</p>
-                        <p id="profileRole" class="font-bold text-slate-800 mt-1">-</p>
+            <div class="card-modern p-7 lg:col-span-2">
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 class="text-xl font-extrabold text-slate-950">
+                            Detail Akun
+                        </h3>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Data lengkap akun admin.
+                        </p>
                     </div>
                 </div>
 
-                <div class="mt-6 flex flex-col md:flex-row gap-3 justify-end">
-                    <a href="/admin/profile/edit" class="text-center bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-3 rounded-xl font-semibold">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="rounded-2xl border border-purple-100 bg-purple-50/40 p-5">
+                        <p class="text-sm text-slate-500">ID User</p>
+                        <p id="profileID" class="font-extrabold text-slate-950 mt-1">-</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-pink-100 bg-pink-50/40 p-5">
+                        <p class="text-sm text-slate-500">Role</p>
+                        <p id="profileRole" class="font-extrabold text-slate-950 mt-1">-</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-purple-100 bg-purple-50/40 p-5 md:col-span-2">
+                        <p class="text-sm text-slate-500">Nama Lengkap</p>
+                        <p id="profileNama" class="font-extrabold text-slate-950 mt-1">-</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-pink-100 bg-pink-50/40 p-5 md:col-span-2">
+                        <p class="text-sm text-slate-500">Username</p>
+                        <p id="profileUsername" class="font-extrabold text-slate-950 mt-1">-</p>
+                    </div>
+                </div>
+
+                <div class="mt-7 flex flex-col sm:flex-row gap-3 justify-end">
+                    <a href="/admin/profile/edit" class="btn-primary text-center">
                         Edit Profil
                     </a>
 
-                    <a href="/admin/dashboard" class="text-center border border-slate-300 hover:bg-slate-50 text-slate-700 px-5 py-3 rounded-xl font-semibold">
+                    <a href="/admin/dashboard" class="btn-secondary text-center">
                         Kembali ke Dashboard
                     </a>
                 </div>
             </div>
+
         </section>
+
     </main>
 
+    {{ template "admin_footer.html" . }}
+    {{ template "admin_scripts.html" . }}
+
     <script>
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const token = window.adminToken;
 
         const alertBox = document.getElementById("alertBox");
         const loadingBox = document.getElementById("loadingBox");
         const profileBox = document.getElementById("profileBox");
-
-        if (!token || !user) {
-            window.location.href = "/login-page";
-        }
-
-        if (user.role !== "admin") {
-            window.location.href = "/user/dashboard";
-        }
-
-        function logout() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.location.href = "/login-page";
-        }
 
         function showAlert(message, type = "error") {
             alertBox.classList.remove("hidden");
             alertBox.textContent = message;
 
             if (type === "success") {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-green-100 text-green-700 border border-green-200";
             } else {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-red-100 text-red-700 border border-red-200";
             }
         }
 
@@ -147,15 +157,30 @@
             return value || "-";
         }
 
-        function setProfileData(data) {
-            document.getElementById("profileNamaHeader").textContent = safeText(data.nama);
-            document.getElementById("profileUsernameHeader").textContent = `@${safeText(data.username)}`;
-            document.getElementById("profileRoleBadge").textContent = safeText(data.role);
+        function roleLabel(role) {
+            if (role === "admin") {
+                return "Admin";
+            }
 
-            document.getElementById("profileID").textContent = safeText(data.id_user);
-            document.getElementById("profileNama").textContent = safeText(data.nama);
-            document.getElementById("profileUsername").textContent = safeText(data.username);
-            document.getElementById("profileRole").textContent = safeText(data.role);
+            return "User / Pakar";
+        }
+
+        function setText(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            element.textContent = value;
+        }
+
+        function setProfileData(data) {
+            setText("profileNamaHeader", safeText(data.nama));
+            setText("profileUsernameHeader", `@${safeText(data.username)}`);
+            setText("profileRoleBadge", roleLabel(data.role));
+
+            setText("profileID", safeText(data.id_user));
+            setText("profileNama", safeText(data.nama));
+            setText("profileUsername", `@${safeText(data.username)}`);
+            setText("profileRole", roleLabel(data.role));
         }
 
         async function loadProfile() {

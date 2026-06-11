@@ -1,0 +1,80 @@
+{{ define "admin_scripts.html" }}
+<script>
+    const adminToken = localStorage.getItem("token");
+    const adminUser = JSON.parse(localStorage.getItem("user") || "null");
+
+    window.adminToken = adminToken;
+    window.adminUser = adminUser;
+
+    if (!adminToken || !adminUser) {
+        window.location.href = "/login-page";
+    }
+
+    if (adminUser.role !== "admin") {
+        window.location.href = "/user/dashboard";
+    }
+
+    function setAdminText(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        element.textContent = value;
+    }
+
+    setAdminText("adminName", adminUser.nama || "Admin");
+    setAdminText("adminRole", "Admin");
+    setAdminText("dropdownAdminName", adminUser.nama || "Admin");
+
+    function toggleAdminProfileDropdown() {
+        const profileDropdown = document.getElementById("profileDropdown");
+        const dropdownIcon = document.getElementById("dropdownIcon");
+
+        if (!profileDropdown || !dropdownIcon) return;
+
+        profileDropdown.classList.toggle("hidden");
+        dropdownIcon.classList.toggle("rotate-180");
+    }
+
+    document.addEventListener("click", function(event) {
+        const profileDropdown = document.getElementById("profileDropdown");
+        const profileDropdownButton = document.getElementById("profileDropdownButton");
+        const dropdownIcon = document.getElementById("dropdownIcon");
+
+        if (!profileDropdown || !profileDropdownButton || !dropdownIcon) return;
+
+        const isClickInside =
+            profileDropdownButton.contains(event.target) ||
+            profileDropdown.contains(event.target);
+
+        if (!isClickInside) {
+            profileDropdown.classList.add("hidden");
+            dropdownIcon.classList.remove("rotate-180");
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login-page";
+    }
+
+    function setActiveAdminNav() {
+        const currentPath = window.location.pathname;
+
+        document.querySelectorAll("[data-admin-nav]").forEach(function(link) {
+            const targetPath = link.getAttribute("data-admin-nav");
+
+            const isActive =
+                currentPath === targetPath ||
+                currentPath.startsWith(targetPath + "/");
+
+            if (isActive) {
+                link.classList.remove("nav-link");
+                link.classList.add("nav-link-active");
+            }
+        });
+    }
+
+    setActiveAdminNav();
+</script>
+{{ end }}

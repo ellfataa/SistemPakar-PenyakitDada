@@ -9,94 +9,145 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/custom.css">
 </head>
-<body class="min-h-screen bg-slate-100">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
-                <p class="text-sm text-slate-500">Manajemen User</p>
-            </div>
+<body class="min-h-screen app-bg text-slate-800">
 
-            <div class="flex items-center gap-4">
-                <a href="/admin/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">Dashboard</a>
-                <a href="/admin/gejala" class="text-sm font-semibold text-blue-600 hover:underline">Gejala</a>
-                <a href="/admin/penyakit" class="text-sm font-semibold text-blue-600 hover:underline">Penyakit</a>
-                <a href="/admin/relasi" class="text-sm font-semibold text-blue-600 hover:underline">Relasi</a>
-                <a href="/admin/profile" class="text-sm font-semibold text-blue-600 hover:underline">Profil</a>
+    {{ template "admin_navbar.html" . }}
 
-                <div class="text-right">
-                    <p id="adminName" class="text-sm font-semibold text-slate-700">Admin</p>
-                    <p id="adminRole" class="text-xs text-slate-500">role</p>
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <section class="mb-8">
+            <div class="card-modern p-7 md:p-8 overflow-hidden relative">
+                <div class="absolute -right-12 -top-12 w-52 h-52 rounded-full bg-pink-100 blur-3xl"></div>
+                <div class="absolute right-32 -bottom-14 w-48 h-48 rounded-full bg-purple-100 blur-3xl"></div>
+
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div>
+                        <span class="inline-flex badge-pink px-4 py-2 text-xs mb-4">
+                            Manajemen Akses
+                        </span>
+
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight">
+                            Manajemen User
+                        </h2>
+
+                        <p class="text-slate-500 mt-3 max-w-2xl leading-relaxed">
+                            Kelola akun admin dan user/pakar yang menggunakan sistem pakar internal rumah sakit.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button
+                            type="button"
+                            onclick="loadUsers()"
+                            class="btn-secondary text-center"
+                        >
+                            Refresh Data
+                        </button>
+
+                        <a href="/admin/users/create" class="btn-primary text-center">
+                            + Tambah User
+                        </a>
+                    </div>
                 </div>
-
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
-                    Logout
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <section class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-                <h2 class="text-2xl font-bold text-slate-800">Manajemen User</h2>
-                <p class="text-slate-500 mt-1">Kelola akun admin, pakar, dan user.</p>
-            </div>
-
-            <a href="/admin/users/create" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold">
-                + Tambah User
-            </a>
-        </section>
-
-        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
-
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-2xl shadow p-5">
-                <p class="text-sm text-slate-500">Total User</p>
-                <p id="totalUser" class="text-3xl font-bold text-slate-800 mt-1">0</p>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow p-5">
-                <p class="text-sm text-slate-500">Admin</p>
-                <p id="totalAdmin" class="text-3xl font-bold text-blue-600 mt-1">0</p>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow p-5">
-                <p class="text-sm text-slate-500">User</p>
-                <p id="totalRoleUser" class="text-3xl font-bold text-green-600 mt-1">0</p>
             </div>
         </section>
 
-        <section class="bg-white rounded-2xl shadow overflow-hidden">
-            <div class="px-6 py-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div id="alertBox" class="hidden mb-5 rounded-xl px-4 py-3 text-sm"></div>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <div class="card-modern p-6">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-sm text-slate-500">Total Akun</p>
+                        <p id="totalUser" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                    </div>
+
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center">
+                        <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linejoin="round" d="M4 20a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
+                            <circle cx="12" cy="9" r="4" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-modern p-6">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-sm text-slate-500">Admin</p>
+                        <p id="totalAdmin" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                    </div>
+
+                    <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center">
+                        <svg class="w-7 h-7 text-pink-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3 5 6v5c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12.5 11.3 14.3 15 10" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-modern p-6">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-sm text-slate-500">User / Pakar</p>
+                        <p id="totalRoleUser" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                    </div>
+
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center">
+                        <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-modern overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-800">Daftar Akun</h3>
-                    <p class="text-sm text-slate-500">Data akun yang terdaftar pada sistem.</p>
+                    <h3 class="text-lg font-extrabold text-slate-950">
+                        Daftar Akun
+                    </h3>
+
+                    <p class="text-sm text-slate-500 mt-1">
+                        Data akun yang terdaftar pada sistem.
+                    </p>
                 </div>
 
-                <button
-                    onclick="loadUsers()"
-                    class="border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">
-                    Refresh
-                </button>
+                <div class="relative w-full md:w-80">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="input-modern pr-10"
+                        placeholder="Cari nama atau username..."
+                    >
+
+                    <svg class="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35" />
+                        <circle cx="11" cy="11" r="7" />
+                    </svg>
+                </div>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-slate-50 border-b border-slate-200">
+                    <thead class="table-head border-b border-purple-100">
                         <tr>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">No</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">ID</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Nama</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Username</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Role</th>
-                            <th class="px-6 py-4 text-right font-semibold text-slate-600">Aksi</th>
+                            <th class="px-6 py-4 text-left font-bold">No</th>
+                            <th class="px-6 py-4 text-left font-bold">ID</th>
+                            <th class="px-6 py-4 text-left font-bold">Nama</th>
+                            <th class="px-6 py-4 text-left font-bold">Username</th>
+                            <th class="px-6 py-4 text-left font-bold">Role</th>
+                            <th class="px-6 py-4 text-right font-bold">Aksi</th>
                         </tr>
                     </thead>
+
                     <tbody id="usersTableBody" class="divide-y divide-slate-100">
                         <tr>
-                            <td colspan="6" class="px-6 py-6 text-center text-slate-500">
+                            <td colspan="6" class="px-6 py-8 text-center text-slate-500">
                                 Memuat data...
                             </td>
                         </tr>
@@ -104,40 +155,30 @@
                 </table>
             </div>
         </section>
+
     </main>
 
+    {{ template "admin_footer.html" . }}
+    {{ template "admin_scripts.html" . }}
+
     <script>
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const token = window.adminToken;
+        const currentUser = window.adminUser;
 
         const alertBox = document.getElementById("alertBox");
         const tableBody = document.getElementById("usersTableBody");
+        const searchInput = document.getElementById("searchInput");
 
-        if (!token || !user) {
-            window.location.href = "/login-page";
-        }
-
-        if (user.role !== "admin") {
-            window.location.href = "/user/dashboard";
-        }
-
-        document.getElementById("adminName").textContent = user.nama;
-        document.getElementById("adminRole").textContent = user.role;
-
-        function logout() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.location.href = "/login-page";
-        }
+        let usersData = [];
 
         function showAlert(message, type = "success") {
             alertBox.classList.remove("hidden");
             alertBox.textContent = message;
 
             if (type === "success") {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-green-100 text-green-700 border border-green-200";
             } else {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-red-100 text-red-700 border border-red-200";
             }
 
             setTimeout(() => {
@@ -147,20 +188,13 @@
 
         function escapeHTML(text) {
             if (!text) return "";
-            return text
+
+            return String(text)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
-        }
-
-        function roleBadge(role) {
-            if (role === "admin") {
-                return "bg-blue-100 text-blue-700 border-blue-200";
-            }
-
-            return "bg-green-100 text-green-700 border-green-200";
         }
 
         function roleLabel(role) {
@@ -171,8 +205,124 @@
             return "User / Pakar";
         }
 
+        function roleBadge(role) {
+            if (role === "admin") {
+                return "badge-pink";
+            }
+
+            return "badge-purple";
+        }
+
+        function renderUsers(data) {
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                            Data user tidak ditemukan
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = data.map((item, index) => {
+                const idUser = Number(item.id_user);
+                const isCurrentUser = idUser === Number(currentUser.id_user);
+
+                const nama = escapeHTML(item.nama);
+                const username = escapeHTML(item.username);
+                const role = escapeHTML(item.role);
+
+                return `
+                    <tr class="hover:bg-purple-50/40 transition">
+                        <td class="px-6 py-4 text-slate-500">
+                            ${index + 1}
+                        </td>
+
+                        <td class="px-6 py-4 font-bold text-slate-800">
+                            #${idUser}
+                        </td>
+
+                        <td class="px-6 py-4 text-slate-800 font-bold min-w-48">
+                            ${nama}
+                            ${isCurrentUser ? `<span class="ml-2 badge-purple px-2 py-1 text-[10px]">Anda</span>` : ""}
+                        </td>
+
+                        <td class="px-6 py-4 text-slate-600">
+                            @${username}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <span class="${roleBadge(role)} px-3 py-1 text-xs">
+                                ${roleLabel(role)}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                            <a
+                                href="/admin/users/edit/${idUser}"
+                                class="inline-flex items-center justify-center rounded-xl bg-yellow-100 text-yellow-700 border border-yellow-200 px-3 py-2 text-xs font-bold hover:bg-yellow-200 transition"
+                            >
+                                Edit
+                            </a>
+
+                            <button
+                                type="button"
+                                data-id="${idUser}"
+                                class="delete-user-btn inline-flex items-center justify-center rounded-xl bg-red-100 text-red-700 border border-red-200 px-3 py-2 text-xs font-bold hover:bg-red-200 transition ml-2 ${isCurrentUser ? 'opacity-50 cursor-not-allowed' : ''}"
+                                ${isCurrentUser ? "disabled" : ""}
+                            >
+                                Hapus
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            document.querySelectorAll(".delete-user-btn").forEach(function(button) {
+                button.addEventListener("click", function() {
+                    deleteUser(button.dataset.id);
+                });
+            });
+        }
+
+        function updateStats(users) {
+            document.getElementById("totalUser").textContent = users.length;
+            document.getElementById("totalAdmin").textContent = users.filter(item => item.role === "admin").length;
+            document.getElementById("totalRoleUser").textContent = users.filter(item => item.role === "user").length;
+        }
+
+        function filterUsers() {
+            const keyword = searchInput.value.toLowerCase().trim();
+
+            if (!keyword) {
+                renderUsers(usersData);
+                return;
+            }
+
+            const filtered = usersData.filter(function(item) {
+                const nama = String(item.nama || "").toLowerCase();
+                const username = String(item.username || "").toLowerCase();
+                const role = String(roleLabel(item.role) || "").toLowerCase();
+
+                return nama.includes(keyword) ||
+                    username.includes(keyword) ||
+                    role.includes(keyword);
+            });
+
+            renderUsers(filtered);
+        }
+
         async function loadUsers() {
             try {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                            Memuat data user...
+                        </td>
+                    </tr>
+                `;
+
                 const response = await fetch("/users", {
                     method: "GET",
                     headers: {
@@ -185,7 +335,7 @@
                 if (!response.ok) {
                     tableBody.innerHTML = `
                         <tr>
-                            <td colspan="6" class="px-6 py-6 text-center text-red-500">
+                            <td colspan="6" class="px-6 py-8 text-center text-red-500">
                                 ${result.message || "Gagal mengambil data user"}
                             </td>
                         </tr>
@@ -193,62 +343,15 @@
                     return;
                 }
 
-                const users = result.data || [];
+                usersData = Array.isArray(result.data) ? result.data : [];
 
-                document.getElementById("totalUser").textContent = users.length;
-                document.getElementById("totalAdmin").textContent = users.filter(item => item.role === "admin").length;
-                document.getElementById("totalRoleUser").textContent = users.filter(item => item.role === "user").length;
-
-                if (users.length === 0) {
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="px-6 py-6 text-center text-slate-500">
-                                Belum ada data user
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tableBody.innerHTML = users.map((item, index) => {
-                    const isCurrentUser = item.id_user === user.id_user;
-
-                    return `
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-4 text-slate-600">${index + 1}</td>
-                            <td class="px-6 py-4 font-semibold text-slate-800">${item.id_user}</td>
-                            <td class="px-6 py-4 text-slate-700 font-medium">
-                                ${escapeHTML(item.nama)}
-                                ${isCurrentUser ? `<span class="ml-2 text-xs text-blue-600 font-semibold">(Anda)</span>` : ""}
-                            </td>
-                            <td class="px-6 py-4 text-slate-600">@${escapeHTML(item.username)}</td>
-                            <td class="px-6 py-4">
-                                <span class="rounded-full border px-3 py-1 text-xs font-semibold ${roleBadge(item.role)}">
-                                    ${roleLabel(item.role)}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right whitespace-nowrap">
-                                <a
-                                    href="/admin/users/edit/${item.id_user}"
-                                    class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-2 rounded-lg text-xs font-semibold">
-                                    Edit
-                                </a>
-
-                                <button
-                                    onclick="deleteUser(${item.id_user})"
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold ml-2 ${isCurrentUser ? 'opacity-50 cursor-not-allowed' : ''}"
-                                    ${isCurrentUser ? "disabled" : ""}>
-                                    Hapus
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join("");
+                updateStats(usersData);
+                renderUsers(usersData);
 
             } catch (error) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="px-6 py-6 text-center text-red-500">
+                        <td colspan="6" class="px-6 py-8 text-center text-red-500">
                             Terjadi kesalahan koneksi ke server
                         </td>
                     </tr>
@@ -258,10 +361,13 @@
 
         async function deleteUser(idUser) {
             const confirmDelete = confirm(`Yakin ingin menghapus user dengan ID ${idUser}?`);
-            if (!confirmDelete) return;
+
+            if (!confirmDelete) {
+                return;
+            }
 
             try {
-                const response = await fetch(`/users/${idUser}`, {
+                const response = await fetch(`/users/${encodeURIComponent(idUser)}`, {
                     method: "DELETE",
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -276,12 +382,14 @@
                 }
 
                 showAlert(result.message || "User berhasil dihapus");
-                loadUsers();
+                await loadUsers();
 
             } catch (error) {
                 showAlert("Terjadi kesalahan koneksi ke server", "error");
             }
         }
+
+        searchInput.addEventListener("input", filterUsers);
 
         loadUsers();
     </script>

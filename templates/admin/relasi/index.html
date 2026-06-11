@@ -9,138 +9,225 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/custom.css">
 </head>
-<body class="min-h-screen bg-slate-100">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
-                <p class="text-sm text-slate-500">Kelola Relasi Penyakit dan Gejala</p>
-            </div>
+<body class="min-h-screen app-bg text-slate-800">
 
-            <div class="flex items-center gap-4">
-                <a href="/admin/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Dashboard
-                </a>
+    {{ template "admin_navbar.html" . }}
 
-                <div class="text-right">
-                    <p id="adminName" class="text-sm font-semibold text-slate-700">Admin</p>
-                    <p id="adminRole" class="text-xs text-slate-500">role</p>
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <section class="mb-8">
+            <div class="card-modern p-7 md:p-8 overflow-hidden relative">
+                <div class="absolute -right-12 -top-12 w-52 h-52 rounded-full bg-pink-100 blur-3xl"></div>
+                <div class="absolute right-32 -bottom-14 w-48 h-48 rounded-full bg-purple-100 blur-3xl"></div>
+
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div>
+                        <span class="inline-flex badge-purple px-4 py-2 text-xs mb-4">
+                            Knowledge Base
+                        </span>
+
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight">
+                            Kelola Relasi Penyakit dan Gejala
+                        </h2>
+
+                        <p class="text-slate-500 mt-3 max-w-2xl leading-relaxed">
+                            Hubungkan data penyakit dengan gejala untuk membentuk basis aturan pada sistem pakar diagnosa penyakit dada.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button
+                            type="button"
+                            onclick="refreshRelasiPage()"
+                            class="btn-secondary text-center"
+                        >
+                            Refresh Data
+                        </button>
+
+                    </div>
                 </div>
-
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
-                    Logout
-                </button>
             </div>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-6 py-8">
-
-        <section class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">Relasi Penyakit dan Gejala</h2>
-            <p class="text-slate-500 mt-1">
-                Atur knowledge base sistem pakar dengan menghubungkan penyakit dan gejala.
-            </p>
         </section>
 
-        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+        <div id="alertBox" class="hidden mb-5 rounded-xl px-4 py-3 text-sm"></div>
 
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div class="lg:col-span-1 bg-white rounded-2xl shadow p-6">
-                <h3 class="text-lg font-bold text-slate-800 mb-4">Tambah Relasi</h3>
+
+            <div class="lg:col-span-1 card-modern p-6 md:p-7">
+                <div class="mb-5">
+                    <span class="inline-flex badge-pink px-3 py-1 text-xs mb-3">
+                        Tambah Relasi
+                    </span>
+
+                    <h3 class="text-xl font-extrabold text-slate-950">
+                        Tambah Aturan Baru
+                    </h3>
+
+                    <p class="text-sm text-slate-500 mt-2 leading-relaxed">
+                        Pilih penyakit dan gejala yang saling berhubungan.
+                    </p>
+                </div>
 
                 <form id="relasiForm" class="space-y-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Penyakit</label>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">
+                            Penyakit
+                        </label>
+
                         <select
                             id="kodePenyakit"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required>
+                            class="input-modern"
+                            required
+                        >
                             <option value="">Memuat penyakit...</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Gejala</label>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">
+                            Gejala
+                        </label>
+
                         <select
                             id="kodeGejala"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required>
+                            class="input-modern"
+                            required
+                        >
                             <option value="">Memuat gejala...</option>
                         </select>
                     </div>
 
-                    <button
-                        type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3">
+                    <button type="submit" class="btn-primary w-full">
                         Tambah Relasi
                     </button>
                 </form>
             </div>
 
-            <div class="lg:col-span-2 bg-white rounded-2xl shadow p-6">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+            <div class="lg:col-span-2 card-modern p-6 md:p-7">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
                     <div>
-                        <h3 class="text-lg font-bold text-slate-800">Filter Relasi</h3>
-                        <p class="text-sm text-slate-500">Lihat relasi berdasarkan penyakit tertentu.</p>
+                        <span class="inline-flex badge-purple px-3 py-1 text-xs mb-3">
+                            Ringkasan Data
+                        </span>
+
+                        <h3 class="text-xl font-extrabold text-slate-950">
+                            Statistik Relasi
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-2">
+                            Pantau jumlah data relasi, penyakit, dan gejala.
+                        </p>
                     </div>
 
-                    <select
-                        id="filterPenyakit"
-                        class="rounded-xl border border-slate-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Semua Penyakit</option>
-                    </select>
+                    <div class="relative w-full md:w-80">
+                        <select
+                            id="filterPenyakit"
+                            class="input-modern"
+                        >
+                            <option value="">Semua Penyakit</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div id="summaryBox" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">Total Relasi</p>
-                        <p id="totalRelasi" class="text-2xl font-bold text-slate-800">0</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="rounded-2xl border border-purple-100 bg-purple-50/50 p-5">
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <p class="text-sm text-slate-500">Total Relasi</p>
+                                <p id="totalRelasi" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                            </div>
+
+                            <div class="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07L10.9 5.03" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 0 0-7.07 0L4.81 13.12a5 5 0 0 0 7.07 7.07l1.22-1.22" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">Data Penyakit</p>
-                        <p id="totalPenyakit" class="text-2xl font-bold text-slate-800">0</p>
+                    <div class="rounded-2xl border border-pink-100 bg-pink-50/50 p-5">
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <p class="text-sm text-slate-500">Data Penyakit</p>
+                                <p id="totalPenyakit" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                            </div>
+
+                            <div class="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">
+                                <svg class="w-6 h-6 text-pink-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9c-2.5-3-6-3-7 1-.8 3.2.2 7.5 3 9 1.7.9 3-.2 3-2.5V9Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9c2.5-3 6-3 7 1 .8 3.2-.2 7.5-3 9-1.7.9-3-.2-3-2.5V9Z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="rounded-xl border border-slate-200 p-4">
-                        <p class="text-sm text-slate-500">Data Gejala</p>
-                        <p id="totalGejala" class="text-2xl font-bold text-slate-800">0</p>
+                    <div class="rounded-2xl border border-purple-100 bg-purple-50/50 p-5">
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <p class="text-sm text-slate-500">Data Gejala</p>
+                                <p id="totalGejala" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                            </div>
+
+                            <div class="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.3 16.3a3.45 3.45 0 1 0 0-6.9 3.45 3.45 0 0 0 0 6.9Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.5 23.2a5.18 5.18 0 0 0-10.35 0" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.2 18.3a2.68 2.68 0 1 0 0-5.36 2.68 2.68 0 0 0 0 5.36Z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </section>
 
-        <section class="bg-white rounded-2xl shadow overflow-hidden">
-            <div class="px-6 py-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <section class="card-modern overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-800">Daftar Relasi</h3>
-                    <p class="text-sm text-slate-500">Daftar hubungan penyakit dengan gejala.</p>
+                    <h3 class="text-lg font-extrabold text-slate-950">
+                        Daftar Relasi
+                    </h3>
+
+                    <p class="text-sm text-slate-500 mt-1">
+                        Daftar hubungan antara penyakit dan gejala.
+                    </p>
                 </div>
 
-                <button
-                    onclick="loadRelasi()"
-                    class="border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">
-                    Refresh
-                </button>
+                <div class="relative w-full md:w-80">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="input-modern pr-10"
+                        placeholder="Cari penyakit atau gejala..."
+                    >
+
+                    <svg class="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35" />
+                        <circle cx="11" cy="11" r="7" />
+                    </svg>
+                </div>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-slate-50 border-b border-slate-200">
+                    <thead class="table-head border-b border-purple-100">
                         <tr>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">No</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Kode Penyakit</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Nama Penyakit</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Kode Gejala</th>
-                            <th class="px-6 py-4 text-left font-semibold text-slate-600">Nama Gejala</th>
-                            <th class="px-6 py-4 text-right font-semibold text-slate-600">Aksi</th>
+                            <th class="px-6 py-4 text-left font-bold">No</th>
+                            <th class="px-6 py-4 text-left font-bold">Kode Penyakit</th>
+                            <th class="px-6 py-4 text-left font-bold">Nama Penyakit</th>
+                            <th class="px-6 py-4 text-left font-bold">Kode Gejala</th>
+                            <th class="px-6 py-4 text-left font-bold">Nama Gejala</th>
+                            <th class="px-6 py-4 text-right font-bold">Aksi</th>
                         </tr>
                     </thead>
+
                     <tbody id="relasiTableBody" class="divide-y divide-slate-100">
                         <tr>
-                            <td colspan="6" class="px-6 py-6 text-center text-slate-500">
+                            <td colspan="6" class="px-6 py-8 text-center text-slate-500">
                                 Memuat data...
                             </td>
                         </tr>
@@ -148,11 +235,14 @@
                 </table>
             </div>
         </section>
+
     </main>
 
+    {{ template "admin_footer.html" . }}
+    {{ template "admin_scripts.html" . }}
+
     <script>
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const token = window.adminToken;
 
         const alertBox = document.getElementById("alertBox");
         const relasiForm = document.getElementById("relasiForm");
@@ -160,34 +250,22 @@
         const kodePenyakitSelect = document.getElementById("kodePenyakit");
         const kodeGejalaSelect = document.getElementById("kodeGejala");
         const filterPenyakitSelect = document.getElementById("filterPenyakit");
+        const searchInput = document.getElementById("searchInput");
 
         const tableBody = document.getElementById("relasiTableBody");
 
-        if (!token || !user) {
-            window.location.href = "/login-page";
-        }
-
-        if (user.role !== "admin") {
-            window.location.href = "/user/dashboard";
-        }
-
-        document.getElementById("adminName").textContent = user.nama;
-        document.getElementById("adminRole").textContent = user.role;
-
-        function logout() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.location.href = "/login-page";
-        }
+        let relasiData = [];
+        let penyakitData = [];
+        let gejalaData = [];
 
         function showAlert(message, type = "success") {
             alertBox.classList.remove("hidden");
             alertBox.textContent = message;
 
             if (type === "success") {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-green-100 text-green-700 border border-green-200";
             } else {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-red-100 text-red-700 border border-red-200";
             }
 
             setTimeout(() => {
@@ -195,9 +273,17 @@
             }, 3000);
         }
 
+        function setText(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            element.textContent = value;
+        }
+
         function escapeHTML(text) {
             if (!text) return "";
-            return text
+
+            return String(text)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
@@ -205,127 +291,205 @@
                 .replace(/'/g, "&#039;");
         }
 
-        async function loadDropdownData() {
-            try {
-                const [penyakitResponse, gejalaResponse] = await Promise.all([
-                    fetch("/penyakit"),
-                    fetch("/gejala")
-                ]);
-
-                const penyakitResult = await penyakitResponse.json();
-                const gejalaResult = await gejalaResponse.json();
-
-                if (!penyakitResponse.ok || !gejalaResponse.ok) {
-                    showAlert("Gagal memuat data penyakit atau gejala", "error");
-                    return;
-                }
-
-                const penyakitList = penyakitResult.data || [];
-                const gejalaList = gejalaResult.data || [];
-
-                document.getElementById("totalPenyakit").textContent = penyakitList.length;
-                document.getElementById("totalGejala").textContent = gejalaList.length;
-
-                kodePenyakitSelect.innerHTML = `
-                    <option value="">Pilih Penyakit</option>
-                    ${penyakitList.map(item => `
-                        <option value="${item.kode_penyakit}">
-                            ${item.kode_penyakit} - ${escapeHTML(item.nama_penyakit)}
-                        </option>
-                    `).join("")}
-                `;
-
-                filterPenyakitSelect.innerHTML = `
-                    <option value="">Semua Penyakit</option>
-                    ${penyakitList.map(item => `
-                        <option value="${item.kode_penyakit}">
-                            ${item.kode_penyakit} - ${escapeHTML(item.nama_penyakit)}
-                        </option>
-                    `).join("")}
-                `;
-
-                kodeGejalaSelect.innerHTML = `
-                    <option value="">Pilih Gejala</option>
-                    ${gejalaList.map(item => `
-                        <option value="${item.kode_gejala}">
-                            ${item.kode_gejala} - ${escapeHTML(item.nama_gejala)}
-                        </option>
-                    `).join("")}
-                `;
-
-            } catch (error) {
-                showAlert("Terjadi kesalahan koneksi saat memuat dropdown", "error");
-            }
+        function renderSelectOptions(selectElement, defaultText, data, valueKey, labelKey) {
+            selectElement.innerHTML = `
+                <option value="">${defaultText}</option>
+                ${data.map(item => `
+                    <option value="${escapeHTML(item[valueKey])}">
+                        ${escapeHTML(item[valueKey])} - ${escapeHTML(item[labelKey])}
+                    </option>
+                `).join("")}
+            `;
         }
 
-        async function loadRelasi() {
-            const kodePenyakitFilter = filterPenyakitSelect.value;
-            const url = kodePenyakitFilter
-                ? `/relasi/penyakit/${kodePenyakitFilter}`
-                : "/relasi";
+        function renderRelasi(data) {
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                            Data relasi tidak ditemukan
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
 
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="px-6 py-6 text-center text-slate-500">
-                        Memuat data...
-                    </td>
-                </tr>
-            `;
+            tableBody.innerHTML = data.map((item, index) => {
+                const kodePenyakit = escapeHTML(item.kode_penyakit);
+                const namaPenyakit = escapeHTML(item.nama_penyakit);
+                const kodeGejala = escapeHTML(item.kode_gejala);
+                const namaGejala = escapeHTML(item.nama_gejala);
 
-            try {
-                const response = await fetch(url);
-                const result = await response.json();
+                return `
+                    <tr class="hover:bg-purple-50/40 transition align-top">
+                        <td class="px-6 py-4 text-slate-500">
+                            ${index + 1}
+                        </td>
 
-                if (!response.ok) {
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="px-6 py-6 text-center text-red-500">
-                                ${result.message || "Gagal mengambil data relasi"}
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
+                        <td class="px-6 py-4">
+                            <span class="badge-pink px-3 py-1 text-xs">
+                                ${kodePenyakit}
+                            </span>
+                        </td>
 
-                const relasiList = result.data || [];
-                document.getElementById("totalRelasi").textContent = relasiList.length;
+                        <td class="px-6 py-4 text-slate-800 font-bold min-w-48">
+                            ${namaPenyakit}
+                        </td>
 
-                if (relasiList.length === 0) {
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="px-6 py-6 text-center text-slate-500">
-                                Belum ada data relasi
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
+                        <td class="px-6 py-4">
+                            <span class="badge-purple px-3 py-1 text-xs">
+                                ${kodeGejala}
+                            </span>
+                        </td>
 
-                tableBody.innerHTML = relasiList.map((item, index) => `
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-6 py-4 text-slate-600">${index + 1}</td>
-                        <td class="px-6 py-4 font-semibold text-slate-800">${item.kode_penyakit}</td>
-                        <td class="px-6 py-4 text-slate-700">${escapeHTML(item.nama_penyakit)}</td>
-                        <td class="px-6 py-4 font-semibold text-slate-800">${item.kode_gejala}</td>
-                        <td class="px-6 py-4 text-slate-700">${escapeHTML(item.nama_gejala)}</td>
+                        <td class="px-6 py-4 text-slate-700 leading-relaxed min-w-64">
+                            ${namaGejala}
+                        </td>
+
                         <td class="px-6 py-4 text-right whitespace-nowrap">
                             <button
-                                onclick="deleteRelasi('${item.kode_penyakit}', '${item.kode_gejala}')"
-                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold">
+                                type="button"
+                                data-penyakit="${kodePenyakit}"
+                                data-gejala="${kodeGejala}"
+                                class="delete-relasi-btn inline-flex items-center justify-center rounded-xl bg-red-100 text-red-700 border border-red-200 px-3 py-2 text-xs font-bold hover:bg-red-200 transition"
+                            >
                                 Hapus
                             </button>
                         </td>
                     </tr>
-                `).join("");
+                `;
+            }).join("");
+
+            document.querySelectorAll(".delete-relasi-btn").forEach(function(button) {
+                button.addEventListener("click", function() {
+                    deleteRelasi(button.dataset.penyakit, button.dataset.gejala);
+                });
+            });
+        }
+
+        function applyFilterAndSearch() {
+            const kodePenyakitFilter = filterPenyakitSelect.value;
+            const keyword = searchInput.value.toLowerCase().trim();
+
+            let filtered = relasiData;
+
+            if (kodePenyakitFilter) {
+                filtered = filtered.filter(function(item) {
+                    return item.kode_penyakit === kodePenyakitFilter;
+                });
+            }
+
+            if (keyword) {
+                filtered = filtered.filter(function(item) {
+                    const kodePenyakit = String(item.kode_penyakit || "").toLowerCase();
+                    const namaPenyakit = String(item.nama_penyakit || "").toLowerCase();
+                    const kodeGejala = String(item.kode_gejala || "").toLowerCase();
+                    const namaGejala = String(item.nama_gejala || "").toLowerCase();
+
+                    return kodePenyakit.includes(keyword) ||
+                        namaPenyakit.includes(keyword) ||
+                        kodeGejala.includes(keyword) ||
+                        namaGejala.includes(keyword);
+                });
+            }
+
+            setText("totalRelasi", filtered.length);
+            renderRelasi(filtered);
+        }
+
+        async function fetchJson(url, useToken = false) {
+            const options = {
+                method: "GET",
+                headers: {}
+            };
+
+            if (useToken) {
+                options.headers["Authorization"] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(url, options);
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || `Gagal mengambil data dari ${url}`);
+            }
+
+            return Array.isArray(result.data) ? result.data : [];
+        }
+
+        async function loadDropdownData() {
+            try {
+                kodePenyakitSelect.innerHTML = `<option value="">Memuat penyakit...</option>`;
+                filterPenyakitSelect.innerHTML = `<option value="">Memuat penyakit...</option>`;
+                kodeGejalaSelect.innerHTML = `<option value="">Memuat gejala...</option>`;
+
+                penyakitData = await fetchJson("/penyakit");
+                gejalaData = await fetchJson("/gejala");
+
+                setText("totalPenyakit", penyakitData.length);
+                setText("totalGejala", gejalaData.length);
+
+                renderSelectOptions(
+                    kodePenyakitSelect,
+                    "Pilih Penyakit",
+                    penyakitData,
+                    "kode_penyakit",
+                    "nama_penyakit"
+                );
+
+                renderSelectOptions(
+                    filterPenyakitSelect,
+                    "Semua Penyakit",
+                    penyakitData,
+                    "kode_penyakit",
+                    "nama_penyakit"
+                );
+
+                renderSelectOptions(
+                    kodeGejalaSelect,
+                    "Pilih Gejala",
+                    gejalaData,
+                    "kode_gejala",
+                    "nama_gejala"
+                );
+
+            } catch (error) {
+                showAlert(error.message || "Gagal memuat data penyakit atau gejala", "error");
+
+                kodePenyakitSelect.innerHTML = `<option value="">Gagal memuat penyakit</option>`;
+                filterPenyakitSelect.innerHTML = `<option value="">Gagal memuat penyakit</option>`;
+                kodeGejalaSelect.innerHTML = `<option value="">Gagal memuat gejala</option>`;
+
+                setText("totalPenyakit", 0);
+                setText("totalGejala", 0);
+            }
+        }
+
+        async function loadRelasi() {
+            try {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                            Memuat data relasi...
+                        </td>
+                    </tr>
+                `;
+
+                relasiData = await fetchJson("/relasi");
+
+                setText("totalRelasi", relasiData.length);
+                applyFilterAndSearch();
 
             } catch (error) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="px-6 py-6 text-center text-red-500">
-                            Terjadi kesalahan koneksi ke server
+                        <td colspan="6" class="px-6 py-8 text-center text-red-500">
+                            ${error.message || "Terjadi kesalahan koneksi ke server"}
                         </td>
                     </tr>
                 `;
+
+                setText("totalRelasi", 0);
             }
         }
 
@@ -365,7 +529,7 @@
                 kodePenyakitSelect.value = "";
                 kodeGejalaSelect.value = "";
 
-                loadRelasi();
+                await loadRelasi();
 
             } catch (error) {
                 showAlert("Terjadi kesalahan koneksi ke server", "error");
@@ -380,7 +544,7 @@
             }
 
             try {
-                const response = await fetch(`/relasi/${kodePenyakit}/${kodeGejala}`, {
+                const response = await fetch(`/relasi/${encodeURIComponent(kodePenyakit)}/${encodeURIComponent(kodeGejala)}`, {
                     method: "DELETE",
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -395,14 +559,20 @@
                 }
 
                 showAlert(result.message || "Relasi berhasil dihapus");
-                loadRelasi();
+                await loadRelasi();
 
             } catch (error) {
                 showAlert("Terjadi kesalahan koneksi ke server", "error");
             }
         }
 
-        filterPenyakitSelect.addEventListener("change", loadRelasi);
+        filterPenyakitSelect.addEventListener("change", applyFilterAndSearch);
+        searchInput.addEventListener("input", applyFilterAndSearch);
+
+        async function refreshRelasiPage() {
+            await loadDropdownData();
+            await loadRelasi();
+        }
 
         async function initPage() {
             await loadDropdownData();
