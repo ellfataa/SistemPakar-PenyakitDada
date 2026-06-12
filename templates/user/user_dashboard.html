@@ -9,51 +9,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/custom.css">
 </head>
+
 <body class="min-h-screen app-bg text-slate-800">
 
-    <nav class="glass-nav sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex items-center justify-between gap-4">
-                <a href="/user/dashboard" class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center text-white font-extrabold shadow-lg shadow-pink-200">
-                        SP
-                    </div>
-
-                    <div>
-                        <h1 class="text-lg font-extrabold text-slate-900 leading-tight">Sistem Pakar Dada</h1>
-                        <p class="text-xs text-slate-500">User / Pakar Panel</p>
-                    </div>
-                </a>
-
-                <div class="hidden lg:flex items-center gap-2">
-                    <a href="/user/dashboard" class="nav-link-active">Dashboard</a>
-                    <a href="/user/konsultasi" class="nav-link px-3 py-2">Konsultasi</a>
-                    <a href="/user/riwayat" class="nav-link px-3 py-2">Riwayat</a>
-                    <a href="/user/profile" class="nav-link px-3 py-2">Profil</a>
-                </div>
-
-                <div class="flex items-center gap-3">
-                    <div class="hidden md:block text-right">
-                        <p id="userName" class="text-sm font-bold text-slate-900">User</p>
-                        <p id="userRole" class="text-xs text-slate-500">User / Pakar</p>
-                    </div>
-
-                    <button onclick="logout()" class="btn-danger text-sm">
-                        Logout
-                    </button>
-                </div>
-            </div>
-
-            <div class="lg:hidden mt-4 overflow-x-auto">
-                <div class="flex items-center gap-2 min-w-max pb-1">
-                    <a href="/user/dashboard" class="nav-link-active">Dashboard</a>
-                    <a href="/user/konsultasi" class="nav-link px-3 py-2">Konsultasi</a>
-                    <a href="/user/riwayat" class="nav-link px-3 py-2">Riwayat</a>
-                    <a href="/user/profile" class="nav-link px-3 py-2">Profil</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    {{ template "user_navbar.html" . }}
 
     <main class="max-w-7xl mx-auto px-6 py-10">
 
@@ -65,7 +24,7 @@
                 <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     <div class="lg:col-span-8">
                         <span class="inline-flex badge-pink px-4 py-2 text-xs mb-4">
-                            Clinical Decision Support
+                            Panel Pakar
                         </span>
 
                         <h2 class="text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight">
@@ -98,8 +57,12 @@
                                 </div>
 
                                 <div>
-                                    <p class="text-sm text-slate-500">Status Akun</p>
-                                    <p class="font-extrabold text-slate-900">Aktif sebagai User / Pakar</p>
+                                    <p class="text-sm text-slate-500">
+                                        Status Akun
+                                    </p>
+                                    <p class="font-extrabold text-slate-900">
+                                        Aktif sebagai Pakar
+                                    </p>
                                 </div>
                             </div>
 
@@ -119,11 +82,11 @@
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-slate-500">Total Riwayat</p>
-                        <p id="totalRiwayat" class="text-3xl font-extrabold text-slate-950 mt-1">0</p>
+                        <p id="totalRiwayat" class="text-3xl font-extrabold text-slate-950 mt-1">...</p>
                     </div>
 
                     <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center">
-                        <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2Z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 9h6" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6" />
@@ -136,11 +99,11 @@
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <p class="text-sm text-slate-500">Role</p>
-                        <p class="text-xl font-extrabold text-slate-950 mt-1">User / Pakar</p>
+                        <p class="text-xl font-extrabold text-slate-950 mt-1">Pakar</p>
                     </div>
 
                     <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center">
-                        <svg class="w-7 h-7 text-pink-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <svg class="w-7 h-7 text-pink-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 4l3 3-3 3" />
@@ -157,7 +120,7 @@
                     </div>
 
                     <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center">
-                        <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.5 11 14.5 15.5 9.5" />
                             <circle cx="12" cy="12" r="9" />
                         </svg>
@@ -167,14 +130,18 @@
         </section>
 
         <section class="mb-6">
-            <h3 class="text-xl font-extrabold text-slate-950">Menu User / Pakar</h3>
-            <p class="text-slate-500 text-sm mt-1">Pilih menu untuk mulai menggunakan sistem.</p>
+            <h3 class="text-xl font-extrabold text-slate-950">
+                Menu
+            </h3>
+            <p class="text-slate-500 text-sm mt-1">
+                Pilih menu untuk mulai menggunakan sistem.
+            </p>
         </section>
 
         <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             <a href="/user/konsultasi" class="card-modern p-6 group">
                 <div class="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-5 group-hover:scale-110 transition">
-                    <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v5a4 4 0 0 0 8 0V3" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v5a8 8 0 0 0 16 0V3" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 16v2a3 3 0 0 1-6 0v-1" />
@@ -182,7 +149,10 @@
                     </svg>
                 </div>
 
-                <h3 class="text-lg font-extrabold text-slate-950">Mulai Konsultasi</h3>
+                <h3 class="text-lg font-extrabold text-slate-950">
+                    Mulai Konsultasi
+                </h3>
+
                 <p class="text-slate-500 text-sm mt-2 leading-relaxed">
                     Pilih gejala pasien dan dapatkan hasil diagnosa awal dari sistem.
                 </p>
@@ -190,38 +160,31 @@
 
             <a href="/user/riwayat" class="card-modern p-6 group">
                 <div class="w-14 h-14 rounded-2xl bg-pink-100 flex items-center justify-center mb-5 group-hover:scale-110 transition">
-                    <svg class="w-7 h-7 text-pink-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-pink-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2Z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 9h6" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6" />
                     </svg>
                 </div>
 
-                <h3 class="text-lg font-extrabold text-slate-950">Riwayat Konsultasi</h3>
+                <h3 class="text-lg font-extrabold text-slate-950">
+                    Riwayat Konsultasi
+                </h3>
+
                 <p class="text-slate-500 text-sm mt-2 leading-relaxed">
                     Lihat kembali hasil konsultasi yang pernah dilakukan.
                 </p>
             </a>
 
-            <a href="/user/profile" class="card-modern p-6 group">
-                <div class="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-5 group-hover:scale-110 transition">
-                    <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0" />
-                    </svg>
-                </div>
-
-                <h3 class="text-lg font-extrabold text-slate-950">Profil Akun</h3>
-                <p class="text-slate-500 text-sm mt-2 leading-relaxed">
-                    Lihat dan ubah informasi akun user/pakar.
-                </p>
-            </a>
         </section>
 
         <section class="mt-8 card-modern p-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h3 class="text-lg font-extrabold text-slate-950">Catatan Penggunaan</h3>
+                    <h3 class="text-lg font-extrabold text-slate-950">
+                        Catatan Penggunaan
+                    </h3>
+
                     <p class="text-slate-500 text-sm mt-1 leading-relaxed">
                         Hasil sistem merupakan diagnosa awal berbasis knowledge base dan tetap memerlukan pertimbangan tenaga medis.
                     </p>
@@ -232,33 +195,23 @@
                 </a>
             </div>
         </section>
+
     </main>
 
+    {{ template "user_footer.html" . }}
+    {{ template "user_scripts.html" . }}
+
     <script>
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const token = window.userToken;
+        const user = window.userData;
 
-        if (!token || !user) {
-            window.location.href = "/login-page";
-        }
-
-        if (user.role !== "user") {
-            window.location.href = "/admin/dashboard";
-        }
-
-        document.getElementById("userName").textContent = user.nama;
-        document.getElementById("userRole").textContent = "User / Pakar";
-        document.getElementById("welcomeName").textContent = user.nama;
-
-        function logout() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.location.href = "/login-page";
-        }
+        setUserText("welcomeName", user.nama || "User");
 
         async function loadDashboardStats() {
             try {
-                const response = await fetch(`/riwayat/${user.id_user}`, {
+                setUserText("totalRiwayat", "...");
+
+                const response = await fetch(`/riwayat/${encodeURIComponent(user.id_user)}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -267,10 +220,16 @@
 
                 const result = await response.json();
 
-                if (response.ok && result.data) {
-                    document.getElementById("totalRiwayat").textContent = result.data.length;
+                if (!response.ok) {
+                    setUserText("totalRiwayat", 0);
+                    return;
                 }
+
+                const riwayat = Array.isArray(result.data) ? result.data : [];
+                setUserText("totalRiwayat", riwayat.length);
+
             } catch (error) {
+                setUserText("totalRiwayat", 0);
                 console.log("Gagal memuat total riwayat");
             }
         }

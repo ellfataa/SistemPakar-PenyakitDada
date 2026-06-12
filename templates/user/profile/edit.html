@@ -9,108 +9,126 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/custom.css">
 </head>
-<body class="min-h-screen bg-slate-100">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Sistem Pakar Dada</h1>
-                <p class="text-sm text-slate-500">Edit Profil User</p>
+<body class="min-h-screen app-bg text-slate-800">
+
+    {{ template "user_navbar.html" . }}
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <section class="mb-8">
+            <a href="/user/profile" class="inline-flex items-center gap-2 text-sm font-bold text-purple-700 hover:text-pink-600 transition mb-5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m12 19-7-7 7-7" />
+                </svg>
+                Kembali ke Profil
+            </a>
+
+            <div class="card-modern p-7 md:p-8">
+                <span class="inline-flex badge-pink px-4 py-2 text-xs mb-4">
+                    Edit Profil
+                </span>
+
+                <h2 class="text-3xl font-extrabold text-slate-950">
+                    Edit Profil
+                </h2>
+
+                <p class="text-slate-500 mt-3 leading-relaxed">
+                    Perbarui nama, username, atau password akun yang sedang digunakan.
+                </p>
             </div>
-
-            <div class="flex items-center gap-4">
-                <a href="/user/profile" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Profil
-                </a>
-
-                <a href="/user/dashboard" class="text-sm font-semibold text-blue-600 hover:underline">
-                    Dashboard
-                </a>
-
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold">
-                    Logout
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-3xl mx-auto px-6 py-8">
-        <section class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">Edit Profil</h2>
-            <p class="text-slate-500 mt-1">
-                Perbarui nama, username, atau password akun Anda.
-            </p>
         </section>
 
-        <div id="alertBox" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+        <div id="alertBox" class="hidden mb-5 rounded-xl px-4 py-3 text-sm"></div>
 
-        <section id="loadingBox" class="bg-white rounded-2xl shadow p-8 text-center text-slate-500">
+        <section id="loadingBox" class="card-modern p-8 text-center text-slate-500">
             Memuat data profil...
         </section>
 
-        <section id="formBox" class="hidden bg-white rounded-2xl shadow p-6">
+        <section id="formBox" class="hidden card-modern p-6 md:p-7">
             <form id="editProfileForm" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">
+                        Nama Lengkap
+                    </label>
+
                     <input
                         type="text"
                         id="nama"
-                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="input-modern"
                         placeholder="Masukkan nama lengkap"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">
+                        Username
+                    </label>
+
                     <input
                         type="text"
                         id="username"
-                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="input-modern"
                         placeholder="Masukkan username"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">
+                        Password Baru
+                    </label>
+
                     <input
                         type="password"
                         id="passwordBaru"
-                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="input-modern"
                         placeholder="Kosongkan jika tidak ingin mengganti password"
                     >
-                    <p class="text-xs text-slate-400 mt-1">
+
+                    <p class="text-xs text-slate-400 mt-2">
                         Kosongkan field ini jika tidak ingin mengubah password.
                     </p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password Baru</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">
+                        Konfirmasi Password Baru
+                    </label>
+
                     <input
                         type="password"
                         id="konfirmasiPassword"
-                        class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="input-modern"
                         placeholder="Ulangi password baru"
                     >
                 </div>
 
-                <div class="flex flex-col md:flex-row justify-end gap-3 pt-2">
-                    <a href="/user/profile" class="text-center px-5 py-3 rounded-xl border border-slate-300 text-slate-600 font-semibold">
+                <div class="rounded-2xl bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-700 leading-relaxed">
+                    Jika password baru diisi, konfirmasi password wajib sama. Username akan otomatis dibuat tanpa spasi.
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+                    <a href="/user/profile" class="btn-secondary text-center">
                         Batal
                     </a>
 
-                    <button type="submit" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                    <button type="submit" class="btn-primary">
                         Simpan Perubahan
                     </button>
                 </div>
             </form>
         </section>
+
     </main>
 
+    {{ template "user_footer.html" . }}
+    {{ template "user_scripts.html" . }}
+
     <script>
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const token = window.userToken;
 
         const alertBox = document.getElementById("alertBox");
         const loadingBox = document.getElementById("loadingBox");
@@ -122,26 +140,22 @@
         const passwordBaruInput = document.getElementById("passwordBaru");
         const konfirmasiPasswordInput = document.getElementById("konfirmasiPassword");
 
-        if (!token || !user) {
-            window.location.href = "/login-page";
-        }
-
-        function logout() {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.location.href = "/login-page";
-        }
-
         function showAlert(message, type = "error") {
             alertBox.classList.remove("hidden");
             alertBox.textContent = message;
 
             if (type === "success") {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-green-100 text-green-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-green-100 text-green-700 border border-green-200";
             } else {
-                alertBox.className = "mb-4 rounded-lg px-4 py-3 text-sm bg-red-100 text-red-700";
+                alertBox.className = "mb-5 rounded-xl px-4 py-3 text-sm bg-red-100 text-red-700 border border-red-200";
             }
         }
+
+        usernameInput.addEventListener("input", function() {
+            usernameInput.value = usernameInput.value
+                .toLowerCase()
+                .replace(/\s+/g, "");
+        });
 
         async function loadProfile() {
             try {

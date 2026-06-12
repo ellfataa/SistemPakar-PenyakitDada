@@ -1,0 +1,80 @@
+{{ define "user_scripts.html" }}
+<script>
+    const userToken = localStorage.getItem("token");
+    const userData = JSON.parse(localStorage.getItem("user") || "null");
+
+    window.userToken = userToken;
+    window.userData = userData;
+
+    if (!userToken || !userData) {
+        window.location.href = "/login-page";
+    }
+
+    if (userData.role !== "user") {
+        window.location.href = "/admin/dashboard";
+    }
+
+    function setUserText(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        element.textContent = value;
+    }
+
+    setUserText("userName", userData.nama || "User");
+    setUserText("userRole", "User / Pakar");
+    setUserText("dropdownUserName", userData.nama || "User");
+
+    function toggleUserProfileDropdown() {
+        const userProfileDropdown = document.getElementById("userProfileDropdown");
+        const userDropdownIcon = document.getElementById("userDropdownIcon");
+
+        if (!userProfileDropdown || !userDropdownIcon) return;
+
+        userProfileDropdown.classList.toggle("hidden");
+        userDropdownIcon.classList.toggle("rotate-180");
+    }
+
+    document.addEventListener("click", function(event) {
+        const userProfileDropdown = document.getElementById("userProfileDropdown");
+        const userProfileDropdownButton = document.getElementById("userProfileDropdownButton");
+        const userDropdownIcon = document.getElementById("userDropdownIcon");
+
+        if (!userProfileDropdown || !userProfileDropdownButton || !userDropdownIcon) return;
+
+        const isClickInside =
+            userProfileDropdownButton.contains(event.target) ||
+            userProfileDropdown.contains(event.target);
+
+        if (!isClickInside) {
+            userProfileDropdown.classList.add("hidden");
+            userDropdownIcon.classList.remove("rotate-180");
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login-page";
+    }
+
+    function setActiveUserNav() {
+        const currentPath = window.location.pathname;
+
+        document.querySelectorAll("[data-user-nav]").forEach(function(link) {
+            const targetPath = link.getAttribute("data-user-nav");
+
+            const isActive =
+                currentPath === targetPath ||
+                currentPath.startsWith(targetPath + "/");
+
+            if (isActive) {
+                link.classList.remove("nav-link");
+                link.classList.add("nav-link-active");
+            }
+        });
+    }
+
+    setActiveUserNav();
+</script>
+{{ end }}

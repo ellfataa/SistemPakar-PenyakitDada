@@ -1,18 +1,18 @@
-{{ define "admin_navbar.html" }}
+{{ define "user_navbar.html" }}
 <nav class="glass-nav sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4">
 
         <div class="flex items-center justify-between gap-4">
-            <a href="/admin/dashboard" class="flex items-center gap-3 shrink-0">
+            <a href="/user/dashboard" class="flex items-center gap-3 shrink-0">
                 <div class="w-11 h-11 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-lg shadow-pink-100 overflow-hidden">
                     <img
                         src="/static/img/uksft.png"
                         alt="Logo UKS Teknik Unsoed"
                         class="w-9 h-9 object-contain"
-                        onerror="this.style.display='none'; document.getElementById('fallbackLogo').classList.remove('hidden');"
+                        onerror="this.style.display='none'; document.getElementById('fallbackUserLogo').classList.remove('hidden');"
                     >
 
-                    <span id="fallbackLogo" class="hidden text-sm font-extrabold text-purple-700">
+                    <span id="fallbackUserLogo" class="hidden text-sm font-extrabold text-purple-700">
                         UKS
                     </span>
                 </div>
@@ -28,36 +28,30 @@
             </a>
 
             <div class="hidden lg:flex items-center gap-2">
-                <a href="/admin/dashboard" data-admin-nav="/admin/dashboard" class="nav-link px-3 py-2 rounded-full">
+                <a href="/user/dashboard" data-user-nav="/user/dashboard" class="nav-link px-3 py-2 rounded-full">
                     Dashboard
                 </a>
-                <a href="/admin/gejala" data-admin-nav="/admin/gejala" class="nav-link px-3 py-2 rounded-full">
-                    Gejala
+                <a href="/user/konsultasi" data-user-nav="/user/konsultasi" class="nav-link px-3 py-2 rounded-full">
+                    Konsultasi
                 </a>
-                <a href="/admin/penyakit" data-admin-nav="/admin/penyakit" class="nav-link px-3 py-2 rounded-full">
-                    Penyakit
-                </a>
-                <a href="/admin/relasi" data-admin-nav="/admin/relasi" class="nav-link px-3 py-2 rounded-full">
-                    Relasi
-                </a>
-                <a href="/admin/users" data-admin-nav="/admin/users" class="nav-link px-3 py-2 rounded-full">
-                    Users
+                <a href="/user/riwayat" data-user-nav="/user/riwayat" class="nav-link px-3 py-2 rounded-full">
+                    Riwayat
                 </a>
             </div>
 
             <div class="relative shrink-0">
                 <button
-                    id="profileDropdownButton"
+                    id="userProfileDropdownButton"
                     type="button"
-                    onclick="toggleAdminProfileDropdown()"
+                    onclick="toggleUserProfileDropdown()"
                     class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 hover:bg-white hover:shadow-sm transition"
                 >
                     <div class="hidden md:block text-right">
-                        <p id="adminName" class="text-sm font-bold text-slate-900 leading-tight">
-                            Admin
+                        <p id="userName" class="text-sm font-bold text-slate-900 leading-tight">
+                            User
                         </p>
-                        <p id="adminRole" class="text-xs text-slate-500">
-                            Admin
+                        <p id="userRole" class="text-xs text-slate-500">
+                            User / Pakar
                         </p>
                     </div>
 
@@ -68,18 +62,18 @@
                         </svg>
                     </div>
 
-                    <svg id="dropdownIcon" class="w-4 h-4 text-slate-500 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg id="userDropdownIcon" class="w-4 h-4 text-slate-500 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
                     </svg>
                 </button>
 
                 <div
-                    id="profileDropdown"
+                    id="userProfileDropdown"
                     class="hidden absolute right-0 mt-3 w-64 rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/70 overflow-hidden z-50"
                 >
 
                     <div class="p-2">
-                        <a href="/admin/profile" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-50 transition">
+                        <a href="/user/profile" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-50 transition">
                             <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
@@ -89,7 +83,7 @@
 
                             <div>
                                 <p class="text-sm font-bold text-slate-800">
-                                    Profil Admin
+                                    Profil User
                                 </p>
                                 <p class="text-xs text-slate-500">
                                     Lihat dan ubah profil
@@ -126,20 +120,14 @@
 
         <div class="lg:hidden mt-4 overflow-x-auto">
             <div class="flex items-center gap-2 min-w-max pb-1">
-                <a href="/admin/dashboard" data-admin-nav="/admin/dashboard" class="nav-link px-3 py-2 rounded-full">
+                <a href="/user/dashboard" data-user-nav="/user/dashboard" class="nav-link px-3 py-2 rounded-full">
                     Dashboard
                 </a>
-                <a href="/admin/gejala" data-admin-nav="/admin/gejala" class="nav-link px-3 py-2 rounded-full">
-                    Gejala
+                <a href="/user/konsultasi" data-user-nav="/user/konsultasi" class="nav-link px-3 py-2 rounded-full">
+                    Konsultasi
                 </a>
-                <a href="/admin/penyakit" data-admin-nav="/admin/penyakit" class="nav-link px-3 py-2 rounded-full">
-                    Penyakit
-                </a>
-                <a href="/admin/relasi" data-admin-nav="/admin/relasi" class="nav-link px-3 py-2 rounded-full">
-                    Relasi
-                </a>
-                <a href="/admin/users" data-admin-nav="/admin/users" class="nav-link px-3 py-2 rounded-full">
-                    Users
+                <a href="/user/riwayat" data-user-nav="/user/riwayat" class="nav-link px-3 py-2 rounded-full">
+                    Riwayat
                 </a>
             </div>
         </div>
