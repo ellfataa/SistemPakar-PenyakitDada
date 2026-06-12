@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"net/http"
 	"sispak-dada/controllers"
 	"sispak-dada/middlewares"
 
@@ -8,7 +9,11 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	r.GET("/", controllers.Home)
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "landing.html", gin.H{
+			"title": "Sistem Pakar Penyakit Dada",
+		})
+	})
 
 	// Frontend
 	r.GET("/login-page", controllers.ShowLoginPage)

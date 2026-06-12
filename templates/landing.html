@@ -1,0 +1,319 @@
+{{ define "landing.html" }}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+
+<body class="min-h-screen app-bg text-slate-800">
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between gap-4">
+                <a href="/" class="flex items-center gap-3 shrink-0">
+                    <div class="w-11 h-11 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-lg shadow-pink-100 overflow-hidden">
+                        <img
+                            src="/static/img/uksft.png"
+                            alt="Logo RS Teknik Unsoed"
+                            class="w-9 h-9 object-contain"
+                            onerror="this.style.display='none'; document.getElementById('fallbackLandingLogo').classList.remove('hidden');"
+                        >
+
+                        <span id="fallbackLandingLogo" class="hidden text-sm font-extrabold text-purple-700">
+                            UKS
+                        </span>
+                    </div>
+
+                    <div class="min-w-0">
+                        <h1 class="text-base md:text-lg font-extrabold text-slate-900 leading-tight truncate">
+                            Sistem Pakar Penyakit Dada
+                        </h1>
+                        <p class="text-xs text-slate-500 truncate">
+                            UKS Teknik Unsoed
+                        </p>
+                    </div>
+                </a>
+
+                <div class="flex items-center gap-3">
+                    <a href="/login-page" class="btn-secondary text-sm">
+                        Login
+                    </a>
+
+                    <a href="/register-page" class="hidden sm:inline-flex btn-primary text-sm">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
+            <div class="lg:col-span-7">
+                <div class="card-modern p-8 md:p-10 overflow-hidden relative">
+                    <div class="absolute -right-14 -top-14 w-64 h-64 rounded-full bg-pink-100 blur-3xl"></div>
+                    <div class="absolute right-36 -bottom-16 w-56 h-56 rounded-full bg-purple-100 blur-3xl"></div>
+
+                    <div class="relative z-10">
+                        <span class="inline-flex badge-purple px-4 py-2 text-xs mb-5">
+                            Clinical Decision Support System
+                        </span>
+
+                        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-950 leading-tight">
+                            Sistem Pakar untuk Diagnosa Awal Penyakit Dada
+                        </h2>
+
+                        <p class="text-slate-500 mt-5 leading-relaxed max-w-2xl">
+                            Aplikasi ini membantu proses konsultasi awal berdasarkan gejala yang dipilih, kemudian memberikan hasil diagnosa awal berbasis knowledge base.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-3 mt-8">
+                            <a href="/login-page" class="btn-primary text-center">
+                                Masuk ke Sistem
+                            </a>
+
+                            <a href="/register-page" class="btn-secondary text-center">
+                                Buat Akun User
+                            </a>
+                        </div>
+
+                        <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="rounded-2xl border border-purple-100 bg-purple-50/50 p-4">
+                                <p class="text-2xl font-extrabold text-slate-950">01</p>
+                                <p class="text-sm text-slate-500 mt-1">Pilih gejala</p>
+                            </div>
+
+                            <div class="rounded-2xl border border-pink-100 bg-pink-50/50 p-4">
+                                <p class="text-2xl font-extrabold text-slate-950">02</p>
+                                <p class="text-sm text-slate-500 mt-1">Proses sistem</p>
+                            </div>
+
+                            <div class="rounded-2xl border border-purple-100 bg-purple-50/50 p-4">
+                                <p class="text-2xl font-extrabold text-slate-950">03</p>
+                                <p class="text-sm text-slate-500 mt-1">Lihat hasil</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5">
+                <div class="card-modern p-7 md:p-8">
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-pink-100 mb-6">
+                        <svg class="w-11 h-11 text-white" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9c-2.5-3-6-3-7 1-.8 3.2.2 7.5 3 9 1.7.9 3-.2 3-2.5V9Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9c2.5-3 6-3 7 1 .8 3.2-.2 7.5-3 9-1.7.9-3-.2-3-2.5V9Z" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-2xl font-extrabold text-slate-950">
+                        Panel Sistem
+                    </h3>
+
+                    <p class="text-slate-500 mt-3 leading-relaxed">
+                        Admin dapat mengelola data gejala, penyakit, relasi knowledge base, dan akun pengguna. User/Pakar dapat melakukan konsultasi dan melihat riwayat diagnosa.
+                    </p>
+
+                    <div class="mt-6 space-y-3">
+                        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 p-4">
+                            <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3 5 6v5c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3Z" />
+                                </svg>
+                            </div>
+
+                            <div>
+                                <p class="font-bold text-slate-800">Role Admin</p>
+                                <p class="text-xs text-slate-500">Kelola data master dan knowledge base.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 rounded-2xl border border-slate-100 p-4">
+                            <div class="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-pink-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.5 11 14.5 15.5 9.5" />
+                                    <circle cx="12" cy="12" r="9" />
+                                </svg>
+                            </div>
+
+                            <div>
+                                <p class="font-bold text-slate-800">Role User / Pakar</p>
+                                <p class="text-xs text-slate-500">Melakukan konsultasi dan melihat riwayat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fitur" class="mb-12">
+            <div class="mb-6">
+                <h3 class="text-2xl font-extrabold text-slate-950">
+                    Fitur Utama
+                </h3>
+                <p class="text-slate-500 text-sm mt-1">
+                    Fitur yang tersedia pada sistem pakar penyakit dada.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="card-modern p-6">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-5">
+                        <svg class="w-8 h-8 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v5a4 4 0 0 0 8 0V3" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v5a8 8 0 0 0 16 0V3" />
+                            <circle cx="6" cy="17" r="2" />
+                        </svg>
+                    </div>
+
+                    <h4 class="text-lg font-extrabold text-slate-950">
+                        Konsultasi Gejala
+                    </h4>
+
+                    <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+                        User memilih gejala yang dialami untuk mendapatkan hasil diagnosa awal.
+                    </p>
+                </div>
+
+                <div class="card-modern p-6">
+                    <div class="w-14 h-14 rounded-2xl bg-pink-100 flex items-center justify-center mb-5">
+                        <svg class="w-8 h-8 text-pink-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07L10.9 5.03" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 0 0-7.07 0L4.81 13.12a5 5 0 0 0 7.07 7.07l1.22-1.22" />
+                        </svg>
+                    </div>
+
+                    <h4 class="text-lg font-extrabold text-slate-950">
+                        Knowledge Base
+                    </h4>
+
+                    <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+                        Admin menghubungkan penyakit dan gejala sebagai basis aturan sistem pakar.
+                    </p>
+                </div>
+
+                <div class="card-modern p-6">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-5">
+                        <svg class="w-8 h-8 text-purple-700" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9h6" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6" />
+                        </svg>
+                    </div>
+
+                    <h4 class="text-lg font-extrabold text-slate-950">
+                        Riwayat Diagnosa
+                    </h4>
+
+                    <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+                        Setiap hasil konsultasi tersimpan dan dapat dilihat kembali oleh user.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="alur" class="mb-12">
+            <div class="card-modern p-7 md:p-8">
+                <div class="mb-6">
+                    <span class="inline-flex badge-pink px-4 py-2 text-xs mb-4">
+                        Alur Penggunaan
+                    </span>
+
+                    <h3 class="text-2xl font-extrabold text-slate-950">
+                        Cara Menggunakan Sistem
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div class="rounded-2xl border border-purple-100 bg-purple-50/40 p-5">
+                        <p class="text-3xl font-extrabold text-purple-700">1</p>
+                        <h4 class="font-extrabold text-slate-950 mt-3">Login</h4>
+                        <p class="text-sm text-slate-500 mt-2">Masuk menggunakan akun yang telah terdaftar.</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-pink-100 bg-pink-50/40 p-5">
+                        <p class="text-3xl font-extrabold text-pink-700">2</p>
+                        <h4 class="font-extrabold text-slate-950 mt-3">Pilih Gejala</h4>
+                        <p class="text-sm text-slate-500 mt-2">Centang gejala yang sesuai dengan kondisi pasien.</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-purple-100 bg-purple-50/40 p-5">
+                        <p class="text-3xl font-extrabold text-purple-700">3</p>
+                        <h4 class="font-extrabold text-slate-950 mt-3">Proses</h4>
+                        <p class="text-sm text-slate-500 mt-2">Sistem memproses gejala berdasarkan relasi knowledge base.</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-pink-100 bg-pink-50/40 p-5">
+                        <p class="text-3xl font-extrabold text-pink-700">4</p>
+                        <h4 class="font-extrabold text-slate-950 mt-3">Hasil</h4>
+                        <p class="text-sm text-slate-500 mt-2">Hasil diagnosa awal dan solusi dapat dilihat pengguna.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="catatan" class="mb-10">
+            <div class="rounded-3xl bg-yellow-50 border border-yellow-200 p-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 17h.01" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h3 class="font-extrabold text-yellow-800 mb-2">
+                            Catatan Penting
+                        </h3>
+
+                        <p class="text-sm text-yellow-700 leading-relaxed">
+                            Sistem ini digunakan sebagai alat bantu diagnosa awal dan tidak menggantikan pemeriksaan langsung oleh tenaga medis.
+                            Jika mengalami nyeri dada berat, sesak napas, pingsan, atau kondisi memburuk, segera hubungi fasilitas kesehatan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-6 pb-8 pt-4">
+        <div class="border-t border-slate-100 pt-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <p class="text-xs text-slate-400">
+                © 2025 Sistem Pakar Penyakit Dada - UKS Teknik Unsoed
+            </p>
+
+            <p class="text-xs text-slate-400">
+                Sistem Internal
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        const dashboardButton = document.getElementById("dashboardButton");
+
+        if (token && user && dashboardButton) {
+            dashboardButton.classList.remove("hidden");
+
+            if (user.role === "admin") {
+                dashboardButton.href = "/admin/dashboard";
+            } else {
+                dashboardButton.href = "/user/dashboard";
+            }
+        }
+    </script>
+</body>
+</html>
+{{ end }}
